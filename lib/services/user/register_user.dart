@@ -4,7 +4,7 @@ import 'package:localstore/localstore.dart';
 
 Future registerUser(String name, String? email, String phoneNumber, String uid,
     String? imageURL) async {
-  var userCreatedAt = Timestamp.now();
+  var userCreatedAt = DateTime.now();
   await FirebaseFirestore.instance.collection('users').doc(uid).set({
     'displayName': name,
     'email': email,
@@ -13,7 +13,7 @@ Future registerUser(String name, String? email, String phoneNumber, String uid,
     'uid': uid,
     'displayPicture': imageURL ?? ""
   });
-  await Localstore.instance.collection('user').doc(uid).set({
+  var local = await Localstore.instance.collection('user').doc(uid).set({
     'displayName': name,
     'email': email,
     'phoneNumber': phoneNumber,
@@ -21,6 +21,7 @@ Future registerUser(String name, String? email, String phoneNumber, String uid,
     'uid': uid,
     'displayPicture': imageURL ?? ""
   });
+  print(local);
   return UserModel(
       email: email,
       name: name,

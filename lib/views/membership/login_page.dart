@@ -1,14 +1,19 @@
+import 'dart:math';
+
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/user/check_user_exists.dart';
 import 'package:chat_app/services/user/user_sign_in.dart';
+import 'package:chat_app/utils/validation_builder.dart';
+import 'package:chat_app/views/home_page.dart';
 import 'package:chat_app/views/membership/register_user.dart';
+import 'package:chat_app/widgets/action_button.dart';
+import 'package:chat_app/widgets/text_input_container.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-import '../home_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -18,30 +23,114 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late String phoneNumber;
+  late String OTP;
+  late String verificationId;
+  bool OTPSent = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      backgroundColor: kPrimaryColor,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
+              padding: const EdgeInsets.all(10),
               child: const Text(
                 'Login Page',
                 style: TextStyle(fontSize: 48),
               ),
             ),
-            FutureBuilder(
-                future: signInWithPhone(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    print(snapshot.data);
-                  }
-                  return Container();
-                })
+            TextInputContainer(
+              icon: Icons.phone,
+              child: TextFormField(
+                onChanged: (value) => setState(() {
+                  phoneNumber = value;
+                }),
+                validator:
+                    ValidationBuilder().minLength(10).valueRequired().build(),
+                keyboardType: TextInputType.phone,
+                initialValue: "+919819294909",
+                decoration: kInputDecoration("Phone Number"),
+              ),
+            ),
+            if (OTPSent)
+              TextInputContainer(
+                icon: Icons.phone,
+                child: TextFormField(
+                  onChanged: (value) => setState(() {
+                    OTP = value;
+                  }),
+                  obscureText: true,
+                  validator:
+                      ValidationBuilder().minLength(10).valueRequired().build(),
+                  keyboardType: TextInputType.number,
+                  decoration: kInputDecoration("OTP"),
+                ),
+              ),
+            ActionButton(
+              onPressed: () async {
+                if (!OTPSent) {
+                  print("pressed");
+                  verifyNumber();
+                } else {
+                  verifyOTP();
+                }
+              },
+              icon: Icons.phone_callback,
+              text: (!OTPSent ? "Send OTP" : "Verify OTP"),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void verifyNumber() async {
+    await FirebaseAuth.instance.verifyPhoneNumber(
+      timeout: const Duration(seconds: 120),
+      phoneNumber: phoneNumber,
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.code),
+          ),
+        );
+      },
+      codeSent: (String verificationId, int? resendToken) async {
+        setState(() {
+          this.verificationId = verificationId;
+          OTPSent = true;
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
+  void verifyOTP() async {
+    final AuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId, smsCode: OTP);
+    UserCredential value =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    if (await checkUserExists(value.user!.uid)) {
+      UserModel userDetails = await getUserModel(value.user!.uid);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => HomePage(user: userDetails)));
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RegisterUserPage(
+            uid: value.user!.uid,
+            phoneNumber: phoneNumber,
+          ),
+        ),
+      );
+    }
   }
 }

@@ -4,7 +4,7 @@ class UserModel {
   String? email;
   String name;
   String image;
-  Timestamp date;
+  DateTime date;
   String? phoneNumber;
   String uid;
 

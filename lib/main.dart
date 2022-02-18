@@ -80,15 +80,15 @@ class MyApp extends StatelessWidget {
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
             Future.delayed(
-                Duration(milliseconds: 500),
-                (() => Navigator.pushReplacement(
+                const Duration(milliseconds: 500),
+                (){Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => HomePage(
                           user: snapshot.data,
                         ),
                       ),
-                    )));
+                    );});
           } else {
             return LoginPage();
           }

@@ -1,3 +1,4 @@
+import 'package:chat_app/constants.dart';
 import 'package:flutter/material.dart';
 
 class TextInputContainer extends StatelessWidget {
@@ -23,10 +24,14 @@ class TextInputContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          heading!,
+          heading ?? Container(),
           const SizedBox(height: 5),
           Container(
-            color: const Color.fromARGB(255, 56, 56, 56),
+            decoration: BoxDecoration(
+              color: kSecondaryColor,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2,offset: Offset(0, 7))],
+            ),
             child: Row(
               children: [
                 if (icon != null)

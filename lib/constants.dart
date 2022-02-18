@@ -23,3 +23,10 @@ TextStyle kSubTextStyle = const TextStyle(
   fontSize: 14,
   color: Colors.white,
 );
+
+InputDecoration kInputDecoration (String hintText) {
+  return InputDecoration(
+    hintText: hintText,
+    border: InputBorder.none,
+  );
+}
