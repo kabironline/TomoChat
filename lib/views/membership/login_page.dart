@@ -119,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
         await FirebaseAuth.instance.signInWithCredential(credential);
     if (await checkUserExists(value.user!.uid)) {
       UserModel userDetails = await getUserModel(value.user!.uid);
+      
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomePage(user: userDetails)));
     } else {

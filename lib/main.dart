@@ -1,4 +1,5 @@
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/user/register_user.dart';
 import 'package:chat_app/services/user/user_sign_in.dart';
 import 'package:chat_app/views/home_page.dart';
@@ -11,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:localstore/localstore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,31 +23,18 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  Future<Widget> userSignedIn() async {
-    var user = await Localstore.instance.collection('user').get();
+  Future<Widget?> userSignedIn() async {
+    var prefs = await SharedPreferences.getInstance();
+    var user = await prefs.getStringList('user');
     if (user == null) {
-      return LoginPage();
+      var userFirebase = await signInWithPhone();
+      if (userFirebase == null) {
+        return LoginPage();
+      }
+      return HomePage(user: userFirebase);
     } else {
-      return HomePage(
-          user: UserModel(
-              name: user['name'],
-              email: user['email'],
-              uid: user['id'],
-              date: user['createdAt'],
-              image: user['displayPicture'],
-              phoneNumber: user['phoneNumber']));
+      return HomePage(user: await getUserModel(user));
     }
-    // User? user = FirebaseAuth.instance.currentUser;
-    // if (user != null) {
-    //   DocumentSnapshot userData = await FirebaseFirestore.instance
-    //       .collection("users")
-    //       .doc(user.uid)
-    //       .get();
-    // UserModel userModel = UserModel.fromDocument(userData);
-    //   return HomePage(user: userModel);
-    // } else {
-    //   return LoginPage();
-    // }
   }
 
   @override
@@ -71,7 +59,7 @@ class MyApp extends StatelessWidget {
       ),
       // home: TestPage(),
       home: FutureBuilder(
-        future: signInWithPhone(),
+        future: userSignedIn(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -79,18 +67,14 @@ class MyApp extends StatelessWidget {
             );
           } else if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            Future.delayed(
-                const Duration(milliseconds: 500),
-                (){Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(
-                          user: snapshot.data,
-                        ),
-                      ),
-                    );});
-          } else {
-            return LoginPage();
+            Future.delayed(const Duration(milliseconds: 500), () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => snapshot.data,
+                ),
+              );
+            });
           }
           return const Center(
             child: CircularProgressIndicator(),

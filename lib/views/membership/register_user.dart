@@ -71,7 +71,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
             child: const Text('Register'),
             onPressed: () async {
               var user = await registerUser(
-                  name, email, widget.phoneNumber, widget.uid, imageURL);
+                  name, email, widget.phoneNumber, widget.uid, imageURL!);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
