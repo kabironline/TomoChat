@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MessageTextFeildWidget extends StatefulWidget {
-  DMChannelModel channel;
+  ChannelModel channel;
   UserModel userID;
   MessageTextFeildWidget(this.channel, this.userID, {Key? key})
       : super(key: key);

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class ChatPage extends StatefulWidget {
   final UserModel currentUser;
   final UserModel otherUser;
-  final DMChannelModel conversation;
+  final ChannelModel conversation;
 
   const ChatPage(
       {required this.conversation,

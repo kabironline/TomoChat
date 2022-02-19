@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class DMChannelModel {
+class ChannelModel {
   Timestamp createdAt;
   Timestamp lastMessageTime;
   String lastMessage;
@@ -9,7 +9,7 @@ class DMChannelModel {
   String type;
   List<dynamic> users;
 
-  DMChannelModel({
+  ChannelModel({
     required this.recentChatId,
     required this.users,
     required this.type,
@@ -19,8 +19,8 @@ class DMChannelModel {
     required this.uid,
   });
 
-  factory DMChannelModel.fromDocument(DocumentSnapshot doc) {
-    return DMChannelModel(
+  factory ChannelModel.fromDocument(DocumentSnapshot doc) {
+    return ChannelModel(
       recentChatId: doc['recentChatId'],
       createdAt: doc['createdAt'],
       type: doc['type'],

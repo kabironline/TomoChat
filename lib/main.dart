@@ -1,3 +1,4 @@
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/user/register_user.dart';
@@ -42,8 +43,13 @@ class MyApp extends StatelessWidget {
     FirebaseAuth.instance.signOut();
     return MaterialApp(
       title: 'Flutter Demo',
+      // theme: ThemeData(
+      //   primaryColor: kPrimaryColor,
+      //   backgroundColor: kSecondaryColor,
+      //   textTheme: GoogleFonts.robotoTextTheme(),
+      // ),
       theme: ThemeData.dark().copyWith(
-        primaryColor: const Color(0xff1D1D2A),
+        primaryColor: kPrimaryColor,
         textTheme: GoogleFonts.robotoTextTheme(
           Theme.of(context).textTheme,
         ).copyWith(
@@ -53,8 +59,8 @@ class MyApp extends StatelessWidget {
               textStyle: const TextStyle(color: Colors.white)),
         ),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          secondary: const Color(0xff5086B0),
-          background: const Color(0xff1D1D2A),
+          secondary: kSecondaryColor,
+          background: kPrimaryColor,
         ),
       ),
       // home: TestPage(),

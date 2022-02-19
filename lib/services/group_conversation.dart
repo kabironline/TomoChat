@@ -28,7 +28,7 @@ Future<String> createGroupConversation(List<String> users) async {
     'lastMessageUserId': '',
     'channelId': result.id,
     'users': users,
-    'type': 'dm',
+    'type': 'grp',
   }).then((value) async {
     await FirebaseFirestore.instance
         .collection('channels')
@@ -53,7 +53,7 @@ Future<String?> getGroupConversation(List<String> users) async {
   QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
       .instance
       .collection('channels')
-      .where('type', isEqualTo: 'dm')
+      .where('type', isEqualTo: 'grp')
       .where('dmId', isEqualTo: dmId)
       .get();
 

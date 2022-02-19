@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                         title: Text(snapshot.data!.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(messageStream.data.docs[index].data()['lastMessage'], style: const TextStyle(color: Colors.white),),
                         onTap: () async {
-                          DMChannelModel channel = await getChannelModel((messageStream.data.docs[index].data()['channelId']));
+                          ChannelModel channel = await getChannelModel((messageStream.data.docs[index].data()['channelId']));
                           Navigator.push(
                             context,
                             MaterialPageRoute(
