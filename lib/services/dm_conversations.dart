@@ -26,7 +26,7 @@ Future<String> createDMConversation(String uidA, String uidB) async {
     'createdAt': Timestamp.now(),
     'recentChatId': '',
   });
-  var recentChatId = await FirebaseFirestore.instance.collection('recentChat').add({
+  await FirebaseFirestore.instance.collection('recentChat').add({
     'lastMessage': '',
     'lastMessageTime': FieldValue.serverTimestamp(),
     'lastMessageUserId': '',

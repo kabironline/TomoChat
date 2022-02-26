@@ -73,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
             ActionButton(
               onPressed: () async {
                 if (!OTPSent) {
-                  print("pressed");
                   verifyNumber();
                 } else {
                   verifyOTP();
@@ -121,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
       UserModel userDetails = await getUserModel(value.user!.uid);
       
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomePage(user: userDetails)));
+          MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
       Navigator.pushReplacement(
         context,

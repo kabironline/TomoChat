@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 Color kPrimaryColor = const Color(0xff1D1D2A);
 Color kSecondaryColor = const Color(0xff3E3E58);
+Color kIconColor = const Color(0xff67677F);
 Color kAccentColor = const Color(0xff007BDB);
 
 // Color kPrimaryColor = Color.fromARGB(255, 255, 255, 255);

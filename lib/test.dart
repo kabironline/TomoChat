@@ -3,7 +3,7 @@ import 'package:chat_app/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
 
 class TestPage extends StatefulWidget {
-  TestPage({Key? key}) : super(key: key);
+  const TestPage({Key? key}) : super(key: key);
 
   @override
   State<TestPage> createState() => _TestPageState();

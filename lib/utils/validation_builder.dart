@@ -30,6 +30,14 @@ class ValidationBuilder {
     return this;
   }
 
+    /// Performs the email format validation
+  ValidationBuilder maxLength(int length, {message = "Value is too big"}) {
+    _validators.add((value) {
+      return value.toString().length > length ? message : null;
+    });
+    return this;
+  }
+
   ValidationBuilder custom(FormFieldValidator validator) {
     _validators.add(validator);
     return this;

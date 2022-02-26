@@ -2,7 +2,6 @@ import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/services/get_streams.dart';
 import 'package:chat_app/widgets/message_textfeild.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatefulWidget {
@@ -10,7 +9,7 @@ class ChatPage extends StatefulWidget {
   final UserModel otherUser;
   final ChannelModel conversation;
 
-  const ChatPage(
+  ChatPage(
       {required this.conversation,
       required this.currentUser,
       required this.otherUser});
@@ -144,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
               ),
             ),
           ),
-          MessageTextFeildWidget(widget.conversation, widget.currentUser),
+          MessageTextFeildWidget(widget.conversation),
         ],
       ),
     );

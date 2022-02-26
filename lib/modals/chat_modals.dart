@@ -7,6 +7,9 @@ class ChannelModel {
   String uid;
   String recentChatId;
   String type;
+  String? name;
+  String? image;
+  String? description;
   List<dynamic> users;
 
   ChannelModel({
@@ -17,17 +20,37 @@ class ChannelModel {
     required this.lastMessageTime,
     required this.createdAt,
     required this.uid,
+    this.name,
+    this.image,
+    this.description,
   });
 
   factory ChannelModel.fromDocument(DocumentSnapshot doc) {
+    if (doc['type'] == 'grp') {
+      return ChannelModel(
+        recentChatId: doc['recentChatId'],
+        createdAt: doc['createdAt'],
+        type: doc['type'],
+        lastMessage: doc['lastMessage'],
+        lastMessageTime: doc['lastMessageTime'],
+        users: doc['users'],
+        uid: doc.id,
+        name: doc['name'] ?? "",
+        image: doc['image'] ?? "",
+        description: doc['description'] ?? "",
+      );
+    }
     return ChannelModel(
-      recentChatId: doc['recentChatId'],
-      createdAt: doc['createdAt'],
-      type: doc['type'],
-      lastMessage: doc['lastMessage'],
-      lastMessageTime: doc['lastMessageTime'],
-      users: doc['users'],
-      uid: doc.id,
-    );
+        recentChatId: doc['recentChatId'],
+        createdAt: doc['createdAt'],
+        type: doc['type'],
+        lastMessage: doc['lastMessage'],
+        lastMessageTime: doc['lastMessageTime'],
+        users: doc['users'],
+        uid: doc.id,
+        name: null,
+        image: null,
+        description: null,
+      );
   }
 }

@@ -1,14 +1,15 @@
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:chat_app/providers/user.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/messages/send_message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MessageTextFeildWidget extends StatefulWidget {
   ChannelModel channel;
-  UserModel userID;
-  MessageTextFeildWidget(this.channel, this.userID, {Key? key})
+  MessageTextFeildWidget(this.channel, {Key? key})
       : super(key: key);
 
   @override
@@ -19,7 +20,9 @@ class _MessageTextFeildWidgetState extends State<MessageTextFeildWidget> {
   TextEditingController _textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Consumer<MembershipProvider>(
+      builder: (context, membershipProvider, child) {
+       return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -44,7 +47,7 @@ class _MessageTextFeildWidgetState extends State<MessageTextFeildWidget> {
             onTap: () async {
               String message = _textEditingController.text;
               _textEditingController.clear();
-              await sendMessage(message, widget.channel, widget.userID);
+              await sendMessage(message, widget.channel, membershipProvider.user);
             },
             child: Container(
               width: 50,
@@ -62,5 +65,7 @@ class _MessageTextFeildWidgetState extends State<MessageTextFeildWidget> {
         ],
       ),
     );
+
+      });
   }
 }

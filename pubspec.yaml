@@ -45,6 +45,7 @@ dependencies:
   email_validator: ^2.0.1
   localstore: ^1.2.1
   shared_preferences: ^2.0.13
+  provider: ^6.0.2
 
 dev_dependencies:
   flutter_test:
@@ -62,8 +63,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
+  assets: 
+    - assets/images/group_default_image.png

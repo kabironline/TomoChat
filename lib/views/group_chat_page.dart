@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 
 class GroupChatPage extends StatefulWidget {
   ChannelModel groupId;
-  UserModel currentUser;
-  GroupChatPage({required this.groupId,required this.currentUser});
+  GroupChatPage({required this.groupId});
 
   @override
   State<GroupChatPage> createState() => _GroupChatPageState();
@@ -16,13 +15,14 @@ class _GroupChatPageState extends State<GroupChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Group Chat'),
-        ),
-        body: Column(
-          children: [
-            MessageTextFeildWidget(widget.groupId, widget.currentUser)
-          ],
-        ));
+      appBar: AppBar(
+        title: Text('Group Chat'),
+      ),
+      body: Column(
+        children: [
+          MessageTextFeildWidget(widget.groupId)
+        ],
+      ),
+    );
   }
 }

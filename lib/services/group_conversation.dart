@@ -4,23 +4,26 @@ Future<DocumentSnapshot> getDMChannelFromId(String id) async {
   return await FirebaseFirestore.instance.collection('channels').doc(id).get();
 }
 
-Future<String> getOrCreateGroupConversation(List<String> users) async {
-  var conversationId = await getGroupConversation(users);
-  conversationId ??= await createGroupConversation(users);
-  return conversationId;
-}
+// Future<String> getOrCreateGroupConversation(List<String> users) async {
+//   var conversationId = await getGroupConversation(users);
+//   conversationId ??= await createGroupConversation(users);
+//   return conversationId;
+// }
 
-Future<String> createGroupConversation(List<String> users) async {
+Future<String> createGroupConversation(List<String> users, String name, String image, String description) async {
   String dmId = generateDMId(users);
   var result = await FirebaseFirestore.instance.collection('channels').add({
     'users': users,
-    'type': 'dm',
+    'type': 'grp',
     'dmId': dmId,
     'lastMessage': '',
     'lastMessageTime': Timestamp.now(),
     'lastMessageSender': '',
     'createdAt': Timestamp.now(),
     'recentChatId': '',
+    'name': name,
+    'image': image,
+    'description': description,
   });
       await FirebaseFirestore.instance.collection('recentChat').add({
     'lastMessage': '',
@@ -29,6 +32,8 @@ Future<String> createGroupConversation(List<String> users) async {
     'channelId': result.id,
     'users': users,
     'type': 'grp',
+    'name': name,
+    'image': image,
   }).then((value) async {
     await FirebaseFirestore.instance
         .collection('channels')

@@ -10,7 +10,7 @@ class ActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color ?? kSecondaryColor)),
+      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color ?? kAccentColor)),
       onPressed: () {onPressed?.call();},
       child: Padding(
         padding: const EdgeInsets.all(10.0),

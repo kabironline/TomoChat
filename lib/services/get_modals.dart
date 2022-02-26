@@ -1,7 +1,6 @@
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 Future<ChannelModel> getChannelModel(String channelId) async {
   var firestore = FirebaseFirestore.instance;
   DocumentSnapshot doc =
