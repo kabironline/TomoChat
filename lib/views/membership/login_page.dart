@@ -4,15 +4,12 @@ import 'package:chat_app/constants.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/user/check_user_exists.dart';
-import 'package:chat_app/services/user/user_sign_in.dart';
 import 'package:chat_app/utils/validation_builder.dart';
 import 'package:chat_app/views/home_page.dart';
 import 'package:chat_app/views/membership/register_user.dart';
 import 'package:chat_app/widgets/action_button.dart';
 import 'package:chat_app/widgets/text_input_container.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {

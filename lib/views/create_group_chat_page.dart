@@ -7,7 +7,7 @@ import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/group_conversation.dart';
 import 'package:chat_app/services/upload_image.dart';
 import 'package:chat_app/utils/validation_builder.dart';
-import 'package:chat_app/views/group_chat_page.dart';
+import 'package:chat_app/views/chat_page.dart';
 import 'package:chat_app/widgets/action_button.dart';
 import 'package:chat_app/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
@@ -89,9 +89,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 ));
               }
               var uid = await createGroupConversation(widget.users, name, "", description);
-              await updateGroupImage(image, uid);
-              ChannelModel channel = await getChannelModel(uid);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => GroupChatPage(groupId: channel)));
+              await updateGroupImage(image, uid[0], uid[1]);
+
+              ChannelModel channel = await getChannelModel(uid[0]);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ChatPage(conversation:channel)));
             },
             icon: Icons.people_alt,
             text: "Create Group"

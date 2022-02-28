@@ -84,60 +84,112 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   if (messageStream.data.docs[index].data()['type'] == 'dm') {
                     return FutureBuilder(
-                        future: getDMOtherUser(
-                            messageStream.data.docs[index].data()['channelId'],
-                            membership.user.uid),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<UserModel> snapshot) {
-                          if (snapshot.hasData) {
-                            return ListTile(
-                              leading: Container(
-                                height: 48,
-                                width: 48,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.25),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: ClipOval(
-                                    child: Image.network(snapshot.data!.image)),
-                              ),
-                              title: Text(snapshot.data!.name,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Text(
-                                messageStream.data.docs[index]
-                                    .data()['lastMessage'],
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                              onTap: () async {
-                                ChannelModel channel = await getChannelModel(
-                                  (messageStream.data.docs[index]
-                                    .data()['channelId']),
-                                );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatPage(
-                                      conversation: channel,
-                                      otherUser: snapshot.data!,
-                                      currentUser: membership.user,
-                                    ),
+                      future: getDMOtherUser(
+                          messageStream.data.docs[index].data()['channelId'],
+                          membership.user.uid),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<UserModel> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListTile(
+                            leading: Container(
+                              height: 48,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
                                   ),
-                                );
-                              },
-                            );
-                          } else {
-                            return Container();
-                          }
-                        });
+                                ],
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: ClipOval(
+                                  child: Image.network(snapshot.data!.image)),
+                            ),
+                            title: Text(snapshot.data!.name,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text(
+                              messageStream.data.docs[index]
+                                  .data()['lastMessage'],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            onTap: () async {
+                              ChannelModel channel = await getChannelModel(
+                                (messageStream.data.docs[index]
+                                  .data()['channelId']),
+                              );
+                              var otherUser = await getDMOtherUser(channel.uid, membership.user.uid);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                    conversation: channel,
+                                    otherUser: otherUser,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
+                      });
                   }
-                  return const Text("Grps being added later on");
+                  else{
+                    return FutureBuilder(
+                      future: getDMOtherUser(
+                          messageStream.data.docs[index].data()['channelId'],
+                          membership.user.uid),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<UserModel> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListTile(
+                            leading: Container(
+                              height: 48,
+                              width: 48,
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.25),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: ClipOval(
+                                  child: Image.network(messageStream.data.docs[index].data()['image'])),
+                            ),
+                            title: Text(messageStream.data.docs[index].data()['name'],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            subtitle: Text(
+                              messageStream.data.docs[index]
+                                  .data()['lastMessage'],
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            onTap: () async {
+                              ChannelModel channel = await getChannelModel(
+                                (messageStream.data.docs[index]
+                                  .data()['channelId']),
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatPage(
+                                    conversation: channel,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Container();
+                        }
+                      });
+                  }
                 },
               );
             },

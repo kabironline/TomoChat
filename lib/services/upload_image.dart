@@ -10,7 +10,7 @@ Future<String> uploadImage(File image, String fileName) async {
   return await task.ref.getDownloadURL();
 }
 
-Future updateGroupImage(File? image, String uid) async {
+Future updateGroupImage(File? image, String uid,String recentChatId) async {
   if (image == null) {
     await FirebaseFirestore.instance.collection('channel').doc(uid).update({
       'profile':
@@ -20,7 +20,11 @@ Future updateGroupImage(File? image, String uid) async {
   }
   var url = await uploadImage(image, 'group/$uid/profile');
   await FirebaseFirestore.instance
-      .collection('channel')
-      .doc(uid)
-      .update({'profile': url});
+    .collection('channels')
+    .doc(uid)
+    .update({'image': url});
+  await FirebaseFirestore.instance
+    .collection('recentChat')
+    .doc(recentChatId)
+    .update({'image': url});
 }

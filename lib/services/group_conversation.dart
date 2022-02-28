@@ -1,16 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<DocumentSnapshot> getDMChannelFromId(String id) async {
-  return await FirebaseFirestore.instance.collection('channels').doc(id).get();
-}
 
-// Future<String> getOrCreateGroupConversation(List<String> users) async {
-//   var conversationId = await getGroupConversation(users);
-//   conversationId ??= await createGroupConversation(users);
-//   return conversationId;
-// }
-
-Future<String> createGroupConversation(List<String> users, String name, String image, String description) async {
+Future<List<String>> createGroupConversation(List<String> users, String name, String image, String description) async {
   String dmId = generateDMId(users);
   var result = await FirebaseFirestore.instance.collection('channels').add({
     'users': users,
@@ -25,7 +16,7 @@ Future<String> createGroupConversation(List<String> users, String name, String i
     'image': image,
     'description': description,
   });
-      await FirebaseFirestore.instance.collection('recentChat').add({
+     var recentChatId = await FirebaseFirestore.instance.collection('recentChat').add({
     'lastMessage': '',
     'lastMessageTime': FieldValue.serverTimestamp(),
     'lastMessageUserId': '',
@@ -34,22 +25,21 @@ Future<String> createGroupConversation(List<String> users, String name, String i
     'type': 'grp',
     'name': name,
     'image': image,
-  }).then((value) async {
+  });
     await FirebaseFirestore.instance
         .collection('channels')
         .doc(result.id)
-        .update({'recentChatId': value.id});
-  });
+        .update({'recentChatId': recentChatId.id});
   for (var user in users) {
     await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user)
-        .collection('channels')
-        .add({
+      .collection('users')
+      .doc(user)
+      .collection('channels')
+      .add({
       'conversationId': result.id,
     });
   }
-  return result.id;
+  return [result.id,recentChatId.id];
 }
 
 Future<String?> getGroupConversation(List<String> users) async {

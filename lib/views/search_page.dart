@@ -82,7 +82,17 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               ),
                             );
-                          } else {}
+                          } else {
+                            var channelModel = await getChannelModel(grp);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatPage(
+                                  conversation: channelModel,
+                                ),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: Container(
@@ -145,8 +155,7 @@ class _SearchPageState extends State<SearchPage> {
                           MaterialPageRoute(
                             builder: (context) => ChatPage(
                               conversation: channelModel,
-                              currentUser: widget.user,
-                              otherUser: otherUser,
+                              otherUser : otherUser,
                             ),
                           ),
                         );

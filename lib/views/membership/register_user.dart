@@ -34,10 +34,12 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
           children: [
             const Text('Register User'),
             GestureDetector(
-              onTap: () async {
+              onTap: () {
                 //Use ImagePicker to get image from camera or gallery
+                setState(() async {
                 image =
                     await ImagePicker().pickImage(source: ImageSource.gallery);
+                });
               },
               child: Container(
                 height: 150,
@@ -45,7 +47,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                 color: Colors.white,
                 //Create Image picker that picks and crops images to 1:1 ratio and uploads them to the Firebase Storage
                 child: image == null
-                    ? Image.asset(name)
+                    ? Image.asset("assets/images/profile_default_image.jpg")
                     : Image.file(File(image!.path)),
               ),
             ),
@@ -70,7 +72,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
               onPressed: () async {
                 //Upload image to Firebase Storage
                 if (image != null) {
-                  imageURL = await uploadImage(File(image!.path), "");
+                  imageURL = await uploadImage(File(image!.path), "users/${widget.uid}/profile_image");
                 }
                 await membership.registerUser(
                     name, widget.uid, widget.phoneNumber, email, imageURL);
