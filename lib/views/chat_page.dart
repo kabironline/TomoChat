@@ -40,7 +40,7 @@ class _ChatPageState extends State<ChatPage> {
             channelName = widget.otherUser?.name;
         }
         return Scaffold(
-          resizeToAvoidBottomInset: false,
+          // resizeToAvoidBottomInset: false,
           appBar: AppBar(
             elevation: 0,
             toolbarHeight: 60,
@@ -55,6 +55,7 @@ class _ChatPageState extends State<ChatPage> {
           body: Column(
             children: [
               Expanded(
+                flex: 100,
                 child: StreamBuilder(
                   stream: getChannelStream(widget.conversation.uid),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {

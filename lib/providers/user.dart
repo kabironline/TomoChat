@@ -25,7 +25,7 @@ class MembershipProvider extends ChangeNotifier {
   /// [name] is the name of the user
   /// [email] is the email of the user (optional)
   /// [imageUrl] is the image url of the user (optional)
-  Future registerUser(String phoneNumber, String uid, String name,
+  Future registerUser(String name, String uid, String phoneNumber,
       String? email, String? imageUrl) async {
     var user = await service.registerUser(name, email, phoneNumber, uid, imageUrl);
     _user ??= user;
