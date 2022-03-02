@@ -26,4 +26,14 @@ class UserModel {
       uid: doc['uid'],
     );
   }
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      createdAt: (map['createdAt'].toDate()),
+      name: map['displayName'],
+      image: map['displayPicture'],
+      email: map['email'] ?? "",
+      uid: map['uid'],
+      phoneNumber: map['phoneNumber'] ?? "",
+    );
+  }
 }

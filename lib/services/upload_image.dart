@@ -11,9 +11,13 @@ Future<String> uploadImage(File image, String fileName) async {
 }
 
 Future updateGroupImage(File? image, String uid,String recentChatId) async {
-  if (image == null) {
-    await FirebaseFirestore.instance.collection('channel').doc(uid).update({
-      'profile':
+  if (image?.path == "" || image == null) {
+    await FirebaseFirestore.instance.collection('channels').doc(uid).update({
+      'image':
+          "https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/group_default_image.png?alt=media&token=f3f0180b-6f51-424a-9d5d-be7e8cfe3ff4"
+    });
+    await FirebaseFirestore.instance.collection('recentChat').doc(recentChatId).update({
+      'image':
           "https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/group_default_image.png?alt=media&token=f3f0180b-6f51-424a-9d5d-be7e8cfe3ff4"
     });
     return;

@@ -48,9 +48,10 @@ class _LoginPageState extends State<LoginPage> {
                 }),
                 validator:
                     ValidationBuilder().minLength(10).valueRequired().build(),
+                autovalidateMode: AutovalidateMode.always,
                 keyboardType: TextInputType.phone,
-                initialValue: "+919819294909",
-                decoration: kInputDecoration("Phone Number"),
+                initialValue: "",
+                decoration: kInputDecoration("+910123456789"),
               ),
             ),
             if (OTPSent)

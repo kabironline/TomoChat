@@ -33,7 +33,7 @@ class MembershipProvider extends ChangeNotifier {
 
   /// Search for the users with the given [name]
   /// [name] is the name of the user
-  Future<List<Map>> searchUsers(String name) async {
+  Future<List<UserModel>> searchUsers(String name) async {
     var users = await onSearch(name, _user!.uid);
     return users;
   }

@@ -24,7 +24,8 @@ class _SearchPageState extends State<SearchPage> {
   bool multiSelect = false;
   List<String> selectedUsers = [];
   final TextEditingController _searchController = TextEditingController();
-  List<Map> searchList = [];
+  List<UserModel> searchList = [];
+  List<String> searchListUid = [];
   bool _isSearching = false;
 
   @override
@@ -47,7 +48,12 @@ class _SearchPageState extends State<SearchPage> {
             var list =
                 await membershipProvider.searchUsers(_searchController.text);
             setState(() {
-              searchList = list;
+              for (var user in list) {
+                if (!searchListUid.contains(user.uid)){
+                  searchList.add(user);
+                  searchListUid.add(user.uid);
+                }
+              }
             });
           },
           child: const Icon(
@@ -69,7 +75,8 @@ class _SearchPageState extends State<SearchPage> {
                     trailing: GestureDetector(
                       onTap: () async {
                         if (selectedUsers.length >= 2) {
-                          if (!selectedUsers.contains(membershipProvider.user.uid)) {
+                          if (!selectedUsers
+                              .contains(membershipProvider.user.uid)) {
                             selectedUsers.add(membershipProvider.user.uid);
                           }
                           var grp = await getGroupConversation(selectedUsers);
@@ -115,10 +122,11 @@ class _SearchPageState extends State<SearchPage> {
           ),
           if (searchList.isNotEmpty)
             Expanded(
+              flex: 100,
               child: ListView.builder(
                 itemCount: searchList.length,
                 itemBuilder: (context, index) {
-                  var uid = searchList[index]['uid'];
+                  var uid = searchList[index].uid;
                   return ListTile(
                     selected: selectedUsers.contains(uid),
                     selectedColor: Colors.white,
@@ -126,7 +134,7 @@ class _SearchPageState extends State<SearchPage> {
                     onLongPress: () => setState(() {
                       multiSelect = true;
                       setState(() {
-                          selectedUsers.add(uid);
+                        selectedUsers.add(uid);
                       });
                       print(multiSelect);
                     }),
@@ -146,8 +154,7 @@ class _SearchPageState extends State<SearchPage> {
                       } else {
                         String chatID = await getOrCreateDMConversation(
                             membershipProvider.user.uid, uid);
-                        UserModel otherUser =
-                            await getUserModel(uid);
+                        UserModel otherUser = await getUserModel(uid);
                         ChannelModel channelModel =
                             await getChannelModel(chatID);
                         Navigator.push(
@@ -155,21 +162,20 @@ class _SearchPageState extends State<SearchPage> {
                           MaterialPageRoute(
                             builder: (context) => ChatPage(
                               conversation: channelModel,
-                              otherUser : otherUser,
+                              otherUser: otherUser,
                             ),
                           ),
                         );
                       }
                     },
                     leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(searchList[index]['displayPicture']),
+                      backgroundImage: NetworkImage(searchList[index].image),
                     ),
                     title: Text(
-                      searchList[index]['displayName'],
+                      searchList[index].name,
                       style: const TextStyle(color: Colors.white),
                     ),
-                    subtitle: Text(searchList[index]['email'],
+                    subtitle: Text(searchList[index].phoneNumber ?? "",
                         style: const TextStyle(color: Colors.white)),
                   );
                 },

@@ -14,7 +14,7 @@ Future sendMessage (String message, ChannelModel chat ,UserModel sender) async {
       .add({
     'message': message,
     'senderId': sender.uid,
-    'time': DateTime.now(),
+    'time': FieldValue.serverTimestamp(),
     'type': 'text',
   }).then((value) async {
     //Updating the last message in the chat 
@@ -23,7 +23,7 @@ Future sendMessage (String message, ChannelModel chat ,UserModel sender) async {
         .doc(chat.uid)
         .update({
       'lastMessage': message,
-      'lastMessageTime': DateTime.now(),
+      'lastMessageTime': FieldValue.serverTimestamp(),
       'lastMessageSenderId': sender.uid,
     }).then((value) async {
       //Updating the last message in the recent chat collection
@@ -34,7 +34,7 @@ Future sendMessage (String message, ChannelModel chat ,UserModel sender) async {
           .doc(channelModel.recentChatId)
           .update({
         'lastMessage': message,
-        'lastMessageTime': DateTime.now(),
+        'lastMessageTime': FieldValue.serverTimestamp(),
         'lastMessageUserId': sender.uid,
       });
     });

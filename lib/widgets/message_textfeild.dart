@@ -1,3 +1,4 @@
+import 'package:chat_app/constants.dart';
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/providers/user.dart';
@@ -25,41 +26,37 @@ class _MessageTextFeildWidgetState extends State<MessageTextFeildWidget> {
        return Container(
       width: MediaQuery.of(context).size.width,
       height: 50,
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+      margin: const EdgeInsets.only(bottom: 10, left: 5,right: 5),
       child: Row(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width - 80,
-            height: 50,
-            child: TextField(
+            height: 70,
+            child: TextFormField(
               controller: _textEditingController,
               decoration: InputDecoration(
+                filled: true,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(100),
+                  
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                fillColor: Colors.black,
+                fillColor: kSecondaryColor,
                 hintText: 'Type a message',
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          GestureDetector(
-            onTap: () async {
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            mini: true,
+            backgroundColor: kAccentColor,
+            onPressed: () async {
               String message = _textEditingController.text;
               _textEditingController.clear();
               await sendMessage(message, widget.channel, membershipProvider.user);
             },
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.send,
-                color: Colors.black,
-              ),
+            child: const Icon(
+              Icons.send,
+              color: Colors.white,
             ),
           ),
         ],
