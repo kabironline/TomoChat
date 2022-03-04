@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChannelModel {
-  Timestamp createdAt;
-  Timestamp lastMessageTime;
+  String uid; // Channel ID
   String lastMessage;
-  String uid;
   String recentChatId;
   String type;
   String? name;
   String? image;
   String? description;
+  
   List<dynamic> users;
+
+  Timestamp createdAt;
+  Timestamp lastMessageTime;
 
   ChannelModel({
     required this.recentChatId,

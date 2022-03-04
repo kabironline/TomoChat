@@ -90,15 +90,15 @@ class _SearchPageState extends State<SearchPage> {
                               ),
                             );
                           } else {
-                            var channelModel = await getChannelModel(grp);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatPage(
-                                  conversation: channelModel,
-                                ),
-                              ),
-                            );
+                            // var channelModel = await getChannelModel(grp);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => ChatPage(
+                            //       conversation: channelModel,
+                            //     ),
+                            //   ),
+                            // );
                           }
                         }
                       },
@@ -152,20 +152,20 @@ class _SearchPageState extends State<SearchPage> {
                           print(selectedUsers);
                         });
                       } else {
-                        String chatID = await getOrCreateDMConversation(
-                            membershipProvider.user.uid, uid);
-                        UserModel otherUser = await getUserModel(uid);
-                        ChannelModel channelModel =
-                            await getChannelModel(chatID);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ChatPage(
-                              conversation: channelModel,
-                              otherUser: otherUser,
-                            ),
-                          ),
-                        );
+                        // String chatID = await getOrCreateDMConversation(
+                        //     membershipProvider.user.uid, uid);
+                        // UserModel otherUser = await getUserModel(uid);
+                        // ChannelModel channelModel =
+                        //     await getChannelModel(chatID);
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ChatPage(
+                        //       conversation: channelModel,
+                        //       otherUser: otherUser,
+                        //     ),
+                        //   ),
+                        // );
                       }
                     },
                     leading: CircleAvatar(

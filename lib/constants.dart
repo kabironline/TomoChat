@@ -12,7 +12,7 @@ Color kAccentColor = const Color(0xff007BDB);
 TextStyle kHeadingTextStyle = const TextStyle(
   fontSize: 20,
   color: Colors.white,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.bold,
 );
 
 TextStyle kSubHeadingTextStyle = const TextStyle(

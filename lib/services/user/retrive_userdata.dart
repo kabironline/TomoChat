@@ -1,5 +1,7 @@
+import 'package:chat_app/services/get_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Future<UserModel> getDMOtherUser(String chatId, String userId) async {
   DocumentSnapshot<Map<String, dynamic>> snapshot =
@@ -15,4 +17,13 @@ Future<UserModel> getDMOtherUser(String chatId, String userId) async {
   var user =
       await FirebaseFirestore.instance.collection('users').doc(uid).get();
   return UserModel.fromDocument(user);
+}
+
+Future<UserModel?> checkUserExistsLocally(String userId) async {
+  var prefs = await SharedPreferences.getInstance();
+  var user = prefs.getString('users/$userId');
+  if (user != null) {
+    return getUserModel(user);
+  }
+    return null;
 }

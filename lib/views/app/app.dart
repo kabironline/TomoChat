@@ -1,3 +1,4 @@
+import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
 import 'package:chat_app/services/user/user_sign_in.dart';
 import 'package:chat_app/themes/theme.dart';
@@ -21,6 +22,7 @@ class _TomoAppState extends State<TomoApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MembershipProvider()),
+        ChangeNotifierProvider(create: (context) => ChannelProvider()),
       ],
       child: MaterialApp(
         title: 'Tomo',
@@ -45,21 +47,3 @@ class _TomoAppState extends State<TomoApp> {
     );
   }
 }
-
-// class TomoApp extends StatefulWidget {
-//   TomoApp({Key? key}) : super(key: key);
-
-//   @override
-//   State<TomoApp> createState() => _TomoAppState();
-// }
-
-// class _TomoAppState extends State<TomoApp> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return FutureBuilder(
-//         future: signInWithUID("wfWcplc9ncXApOxN53jM7b0V2Wl1"),
-//         builder: (context, snapshot) {
-//           return Container(color: Colors.white,);
-//         });
-//   }
-// }

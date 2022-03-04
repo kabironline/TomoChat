@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/modals/chat_modals.dart';
+import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/group_conversation.dart';
@@ -82,28 +83,36 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.075),
-              ActionButton(
-                onPressed: () async {
-                  if (name == "") {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Group name is required'),
-                      ),
-                    );
-                  }
-                  var uid = await createGroupConversation(
-                      widget.users, name, "", description);
-                  await updateGroupImage(image, uid[0], uid[1]);
+              Consumer<ChannelProvider>(
+                builder: (context, channelProvider, child) {
+                  return ActionButton(
+                    onPressed: () async {
+                      channelProvider.createGrpChannel(
+                          widget.users, name, description, image);
+                      if (name == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Group name is required'),
+                          ),
+                        );
+                      }
+                      var uid = await createGroupConversation(
+                          widget.users, name, "", description);
+                      await updateGroupImage(image, uid[0], uid[1]);
 
-                  ChannelModel channel = await getChannelModel(uid[0]);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              ChatPage(conversation: channel)));
+                      ChannelModel channel = await getChannelModel(uid[0]);
+                      //TODO 
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(),
+                        ),
+                      );
+                    },
+                    icon: Icons.people_alt,
+                    text: "Create Group",
+                  );
                 },
-                icon: Icons.people_alt,
-                text: "Create Group",
               ),
             ]),
           ),

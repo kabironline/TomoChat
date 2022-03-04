@@ -1,6 +1,8 @@
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 Future<ChannelModel> getChannelModel(String channelId) async {
   var firestore = FirebaseFirestore.instance;
   DocumentSnapshot doc =
@@ -11,17 +13,20 @@ Future<ChannelModel> getChannelModel(String channelId) async {
 Future<UserModel> getUserModel(var userId) async {
   var firestore = FirebaseFirestore.instance;
   if (userId is String) {
+    // var prefs = await SharedPreferences.getInstance();
     DocumentSnapshot doc =
         await firestore.collection("users").doc(userId).get();
     return UserModel.fromDocument(doc);
+
   }
   return UserModel(
-      name: userId[0],
-      uid: userId[1],
-      image: userId[2],
-      phoneNumber: userId[3],
-      email: userId[4],
-      createdAt: DateTime.parse(userId[5],
+    name: userId[0],
+    uid: userId[1],
+    image: userId[2],
+    phoneNumber: userId[3],
+    email: userId[4],
+    createdAt: DateTime.parse(
+      userId[5],
     ),
   );
 }
