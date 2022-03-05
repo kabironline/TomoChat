@@ -1,7 +1,7 @@
-import 'package:chat_app/modals/user_modals.dart';
-import 'package:chat_app/services/search_user.dart';
-import 'package:chat_app/services/user/user_sign_in.dart';
-import 'package:chat_app/services/user/register_user.dart' as service;
+import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/search_user.dart';
+import 'package:TomoChat/services/user/user_sign_in.dart';
+import 'package:TomoChat/services/user/register_user.dart' as service;
 import 'package:flutter/material.dart';
 
 class MembershipProvider extends ChangeNotifier {

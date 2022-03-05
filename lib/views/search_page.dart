@@ -1,10 +1,10 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/modals/user_modals.dart';
-import 'package:chat_app/providers/channel.dart';
-import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/views/chat_page.dart';
-import 'package:chat_app/views/create_group_chat_page.dart';
-import 'package:chat_app/widgets/text_input_container.dart';
+import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/providers/channel.dart';
+import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/views/chat_page.dart';
+import 'package:TomoChat/views/create_group_chat_page.dart';
+import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

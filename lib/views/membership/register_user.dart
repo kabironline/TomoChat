@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/upload_image.dart';
-import 'package:chat_app/views/home_page.dart';
+import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/services/upload_image.dart';
+import 'package:TomoChat/views/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';

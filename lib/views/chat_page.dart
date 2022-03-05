@@ -1,8 +1,8 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/providers/channel.dart';
-import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/get_streams.dart';
-import 'package:chat_app/utils/timestamp_converter.dart';
+import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/providers/channel.dart';
+import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/services/get_streams.dart';
+import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

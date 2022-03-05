@@ -1,8 +1,8 @@
-import 'package:chat_app/providers/channel.dart';
-import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/themes/theme.dart';
-import 'package:chat_app/views/home_page.dart';
-import 'package:chat_app/views/membership/login_page.dart';
+import 'package:TomoChat/providers/channel.dart';
+import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/themes/theme.dart';
+import 'package:TomoChat/views/home_page.dart';
+import 'package:TomoChat/views/membership/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

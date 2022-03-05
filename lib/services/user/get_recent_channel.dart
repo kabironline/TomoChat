@@ -1,4 +1,4 @@
-import 'package:chat_app/services/user/retrive_userdata.dart';
+import 'package:TomoChat/services/user/retrive_userdata.dart';
 
 Future getRecentChannelData(
     String type, String channelId, String userId, String? image, String? name) async {

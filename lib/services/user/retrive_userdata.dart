@@ -1,6 +1,6 @@
-import 'package:chat_app/services/get_modals.dart';
+import 'package:TomoChat/services/get_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:chat_app/modals/user_modals.dart';
+import 'package:TomoChat/modals/user_modals.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<UserModel> getDMOtherUser(String chatId, String userId) async {

@@ -1,10 +1,10 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/services/user/check_user_exists.dart';
-import 'package:chat_app/utils/validation_builder.dart';
-import 'package:chat_app/views/home_page.dart';
-import 'package:chat_app/views/membership/register_user.dart';
-import 'package:chat_app/widgets/action_button.dart';
-import 'package:chat_app/widgets/text_input_container.dart';
+import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/services/user/check_user_exists.dart';
+import 'package:TomoChat/utils/validation_builder.dart';
+import 'package:TomoChat/views/home_page.dart';
+import 'package:TomoChat/views/membership/register_user.dart';
+import 'package:TomoChat/widgets/action_button.dart';
+import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

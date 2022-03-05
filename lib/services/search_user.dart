@@ -1,4 +1,4 @@
-import 'package:chat_app/modals/user_modals.dart';
+import 'package:TomoChat/modals/user_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<List<UserModel>> onSearch(String search, String userUid) async {

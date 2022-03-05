@@ -1,11 +1,11 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/providers/channel.dart';
-import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/get_streams.dart';
-import 'package:chat_app/services/user/get_recent_channel.dart';
-import 'package:chat_app/services/user/user_sign_out.dart';
-import 'package:chat_app/views/chat_page.dart';
-import 'package:chat_app/views/search_page.dart';
+import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/providers/channel.dart';
+import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/services/get_streams.dart';
+import 'package:TomoChat/services/user/get_recent_channel.dart';
+import 'package:TomoChat/services/user/user_sign_out.dart';
+import 'package:TomoChat/views/chat_page.dart';
+import 'package:TomoChat/views/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

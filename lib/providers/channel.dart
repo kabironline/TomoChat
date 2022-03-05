@@ -1,14 +1,14 @@
 import 'dart:io';
 
-import 'package:chat_app/modals/chat_modals.dart';
-import 'package:chat_app/modals/user_modals.dart';
-import 'package:chat_app/services/dm_conversations.dart';
-import 'package:chat_app/services/get_modals.dart';
-import 'package:chat_app/services/get_streams.dart';
-import 'package:chat_app/services/group_conversation.dart';
-import 'package:chat_app/services/messages/send_message.dart';
-import 'package:chat_app/services/upload_image.dart';
-import 'package:chat_app/services/user/retrive_userdata.dart';
+import 'package:TomoChat/modals/chat_modals.dart';
+import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/dm_conversations.dart';
+import 'package:TomoChat/services/get_modals.dart';
+import 'package:TomoChat/services/get_streams.dart';
+import 'package:TomoChat/services/group_conversation.dart';
+import 'package:TomoChat/services/messages/send_message.dart';
+import 'package:TomoChat/services/upload_image.dart';
+import 'package:TomoChat/services/user/retrive_userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

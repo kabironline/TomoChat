@@ -1,5 +1,5 @@
-import 'package:chat_app/utils/validation_builder.dart';
-import 'package:chat_app/widgets/text_input_container.dart';
+import 'package:TomoChat/utils/validation_builder.dart';
+import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
 import 'package:localstore/localstore.dart';
 
