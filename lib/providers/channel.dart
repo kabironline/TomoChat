@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:chat_app/services/dm_conversations.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/get_streams.dart';
 import 'package:chat_app/services/group_conversation.dart';
@@ -30,17 +31,22 @@ class ChannelProvider extends ChangeNotifier {
         grpUsers = await getGroupUsers();
       }
     } else {
-      getDMOtherUser(channel!.uid, currentUser!.uid).then((value) {
-        dmUser = value;
-        channelImage = dmUser?.image;
-        channelName = dmUser?.name;
-      });
+      var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
+      dmUser = value;
+      channelImage = dmUser?.image;
+      channelName = dmUser?.name;
     }
     notifyListeners();
   }
 
   void setCurrentUser(UserModel user) {
     currentUser = user;
+  }
+
+  Future checkDMChannel(String otherUser) async {
+    String channelId =
+        await getOrCreateDMConversation(currentUser!.uid, otherUser);
+    await setChannel(channelId, null, null);
   }
 
   Future disposeChannel() async {

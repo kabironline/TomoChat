@@ -8,11 +8,11 @@ Future<List<UserModel>> onSearch(String search, String userUid) async {
       .where("displayName", isEqualTo: search.trim())
       .get()
       .then((value) {
-    value.docs.forEach((user) {
+    for (var user in value.docs) {
       if (user.data()['uid'] != user) {
         searchList.add(UserModel.fromMap(user.data()));
       }
-    });
+    }
   });
   return searchList;
 }

@@ -1,11 +1,10 @@
-
-
 import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/services/get_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future sendTextMessage (String message, ChannelModel chat ,UserModel sender) async {
+Future sendTextMessage(
+    String message, ChannelModel chat, UserModel sender) async {
   //Adding message to the messages collection
   await FirebaseFirestore.instance
       .collection('channels')
@@ -17,7 +16,7 @@ Future sendTextMessage (String message, ChannelModel chat ,UserModel sender) asy
     'time': FieldValue.serverTimestamp(),
     'type': 'text',
   }).then((value) async {
-    //Updating the last message in the chat 
+    //Updating the last message in the chat
     await FirebaseFirestore.instance
         .collection('channels')
         .doc(chat.uid)
@@ -27,11 +26,10 @@ Future sendTextMessage (String message, ChannelModel chat ,UserModel sender) asy
       'lastMessageSenderId': sender.uid,
     }).then((value) async {
       //Updating the last message in the recent chat collection
-      ChannelModel channelModel =
-          await getChannelModel(chat.uid);
+      await getChannelModel(chat.uid);
       FirebaseFirestore.instance
           .collection('recentChat')
-          .doc(chat.recentChatId)          
+          .doc(chat.recentChatId)
           .update({
         'lastMessage': message,
         'lastMessageTime': FieldValue.serverTimestamp(),

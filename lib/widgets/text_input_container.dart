@@ -30,7 +30,7 @@ class TextInputContainer extends StatelessWidget {
             decoration: BoxDecoration(
               color: kSecondaryColor,
               borderRadius: BorderRadius.circular(5),
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 2,offset: Offset(0, 7))],
+              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 2,offset: Offset(0, 7))],
             ),
             child: Row(
               children: [

@@ -1,15 +1,14 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/modals/chat_modals.dart';
-import 'package:chat_app/modals/user_modals.dart';
 import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
 import 'package:chat_app/services/get_streams.dart';
-import 'package:chat_app/services/messages/send_message.dart';
 import 'package:chat_app/utils/timestamp_converter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
+  const ChatPage({Key? key}) : super(key: key);
+
   @override
   _ChatPageState createState() => _ChatPageState();
 }
@@ -18,7 +17,7 @@ class _ChatPageState extends State<ChatPage> {
   String? channelImage;
   String? channelName;
   TextEditingController chatBoxTextController = TextEditingController();
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -59,115 +58,10 @@ class _ChatPageState extends State<ChatPage> {
             backgroundColor: kPrimaryColor,
             body: Column(
               children: [
-                Expanded(
-                  child: StreamBuilder(
-                    stream: getChannelStream(channelProvider.channel!.uid),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        return const Text('Start New Converstation');
-                      } else {
-                        return SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            // reverse: true,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.docs.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var timeSent =
-                                  snapshot.data.docs[index].data()['time'];
-                              BoxDecoration decoration;
-                              CrossAxisAlignment alignment;
-                              if (snapshot.data.docs[index]
-                                      .data()['senderId'] ==
-                                  membershipProvider.user.uid) {
-                                alignment = CrossAxisAlignment.end;
-                                decoration = const BoxDecoration(
-                                  color: Color(0xff606082),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(7),
-                                    bottomLeft: Radius.circular(7),
-                                    topRight: Radius.circular(2),
-                                    bottomRight: Radius.circular(7),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 7,
-                                        offset: Offset(0, 7))
-                                  ],
-                                );
-                              } else {
-                                alignment = CrossAxisAlignment.start;
-                                decoration = const BoxDecoration(
-                                  color: Color(0xff3B3B51),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(2),
-                                    bottomLeft: Radius.circular(7),
-                                    topRight: Radius.circular(7),
-                                    bottomRight: Radius.circular(7),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 7,
-                                        offset: Offset(0, 7))
-                                  ],
-                                );
-                              }
-                              return Column(
-                                crossAxisAlignment: alignment,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    margin: const EdgeInsets.only(
-                                      top: 8,
-                                      bottom: 8,
-                                      left: 16,
-                                      right: 16,
-                                    ),
-                                    decoration: decoration,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        if (channelProvider.channel!.type ==
-                                                'grp' &&
-                                            snapshot.data.docs[index]
-                                                    .data()['senderId'] !=
-                                                membershipProvider.user.uid)
-                                          Text(
-                                              channelProvider
-                                                  .grpUsers[snapshot
-                                                      .data.docs[index]
-                                                      .data()['senderId']]!
-                                                  .name,
-                                              style: kSubTextStyle),
-                                        Text(
-                                          snapshot.data.docs[index]['message'],
-                                          style: kSubHeadingTextStyle,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16, bottom: 8),
-                                    child: Text(
-                                      timeSent == null ? "" : convertTimeStamp(timeSent),
-                                      style: const TextStyle(
-                                          fontSize: 14, color: Colors.grey),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        );
-                      }
-                    },
-                  ),
+                buildMessageStream(
+                  context,
+                  channelProvider,
+                  membershipProvider,
                 ),
                 buildTextField(context, channelProvider)
               ],
@@ -177,55 +71,155 @@ class _ChatPageState extends State<ChatPage> {
       },
     );
   }
-  Widget buildTextField(BuildContext context, ChannelProvider channelProvider) {
-  TextEditingController chatBoxTextController = TextEditingController();
-  return Container(
-    padding: const EdgeInsets.all(16.0),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 16, right: 16, top: 2),
-          height: 40,
-          decoration: BoxDecoration(
-            color: kSecondaryColor,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: const [
-              BoxShadow(
-                  color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
-            ],
-          ),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width - 120,
-            child: TextFormField(
-                controller: chatBoxTextController,
-                maxLines: 1,
-                decoration: const InputDecoration(
-                  errorMaxLines: 0,
-                  border: InputBorder.none,
-                  isDense: true,
-                  hintText: 'Type a message',
-                )),
-          ),
-        ),
-        const SizedBox(width: 8),
-        FloatingActionButton(
-          onPressed: (() {
-            if (chatBoxTextController.text != "") {
-              var message = chatBoxTextController.text;
-              setState(() {
-                chatBoxTextController.clear();
-              });
-              channelProvider.sendMessage(message);
-            }
-          }),
-          mini: true,
-          backgroundColor: kAccentColor,
-          child: const Icon(Icons.send),
-        )
-      ],
-    ),
-  );
-}
-}
 
+  Widget buildMessageStream(BuildContext context,
+      ChannelProvider channelProvider, MembershipProvider membershipProvider) {
+    return Expanded(
+      child: StreamBuilder(
+        stream: getChannelStream(channelProvider.channel!.uid),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return const Text('Start New Converstation');
+          } else {
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.75,
+              child: ListView.builder(
+                controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  var timeSent = snapshot.data.docs[index].data()['time'];
+                  var displayTime = true;
+                  var displayName = true;
+                  BoxDecoration decoration;
+                  CrossAxisAlignment alignment;
+                  if (snapshot.data.docs[index].data()['senderId'] ==
+                      membershipProvider.user.uid) {
+                    alignment = CrossAxisAlignment.end;
+                    decoration = kSelfMessageBoxDecoration;
+                  } else {
+                    alignment = CrossAxisAlignment.start;
+                    decoration = kOtherMessageBoxDecoration;
+                  }
+                  if (index != snapshot.data.docs.length - 1 && index != 0) {
+                    var nextMessageTime = snapshot.data.docs[index + 1].data()['time'];
+                    var nextMessageSender =
+                        snapshot.data.docs[index + 1].data()['senderId'] ==
+                            snapshot.data.docs[index].data()['senderId'];
+                    var prevMessageSender = snapshot.data.docs[index - 1].data()['senderId'] ==
+                            snapshot.data.docs[index].data()['senderId'];
+                    if (convertTimeStamp(timeSent) ==
+                            convertTimeStamp(nextMessageTime) &&
+                        nextMessageSender) {
+                      displayTime = false;
+                    }
+                      if (prevMessageSender && nextMessageSender) {
+                        displayName = false;
+                      }
+                  }
+                  return Column(
+                    crossAxisAlignment: alignment,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        margin: EdgeInsets.only(
+                          left: 16,
+                          right: 16,
+                          top: displayTime ? 0 : 0,
+                          bottom: displayTime ? 8 : 2,
+                        ),
+                        decoration: decoration,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (channelProvider.channel!.type == 'grp' &&
+                                snapshot.data.docs[index].data()['senderId'] !=
+                                    membershipProvider.user.uid && displayName)
+                              Text(
+                                  channelProvider
+                                      .grpUsers[snapshot.data.docs[index]
+                                          .data()['senderId']]!
+                                      .name,
+                                  style: kSubTextStyle),
+                            Text(
+                              snapshot.data.docs[index]['message'],
+                              style: kSubHeadingTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (displayTime)
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, bottom: 8),
+                          child: Text(
+                            timeSent == null ? "" : convertTimeStamp(timeSent),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildTextField(BuildContext context, ChannelProvider channelProvider) {
+    TextEditingController chatBoxTextController = TextEditingController();
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 2),
+            height:
+                40 * ('\n'.allMatches(chatBoxTextController.text).length + 1),
+            decoration: BoxDecoration(
+              color: kSecondaryColor,
+              borderRadius: BorderRadius.circular(100),
+              boxShadow: const [
+                BoxShadow(
+                    color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
+              ],
+            ),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width - 120,
+              child: TextField(
+                  controller: chatBoxTextController,
+                  maxLines: 100,
+                  keyboardType: TextInputType.multiline,
+                  decoration: const InputDecoration(
+                    errorMaxLines: 0,
+                    border: InputBorder.none,
+                    isDense: true,
+                    hintText: 'Type a message',
+                  )),
+            ),
+          ),
+          const SizedBox(width: 8),
+          FloatingActionButton(
+            onPressed: (() {
+              if (chatBoxTextController.text != "") {
+                var message = chatBoxTextController.text;
+                setState(() {
+                  chatBoxTextController.clear();
+                });
+                channelProvider.sendMessage(message);
+              }
+            }),
+            mini: true,
+            backgroundColor: kAccentColor,
+            child: const Icon(Icons.send),
+          )
+        ],
+      ),
+    );
+  }
+}

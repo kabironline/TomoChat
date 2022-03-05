@@ -12,10 +12,9 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage> {
   late String emailValue;
-
   @override
-  var store = Localstore.instance;
   Widget build(BuildContext context) {
+    var store = Localstore.instance;
     return MaterialApp(
       home: Scaffold(
         body: SizedBox(
@@ -30,7 +29,7 @@ class _TestPageState extends State<TestPage> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Text(snapshot.data.toString());
                   }
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 },
               ),
               TextInputContainer(

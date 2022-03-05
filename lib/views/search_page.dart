@@ -1,11 +1,7 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/modals/user_modals.dart';
+import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/dm_conversations.dart';
-import 'package:chat_app/services/get_modals.dart';
-import 'package:chat_app/services/group_conversation.dart';
-import 'package:chat_app/services/user/retrive_userdata.dart';
 import 'package:chat_app/views/chat_page.dart';
 import 'package:chat_app/views/create_group_chat_page.dart';
 import 'package:chat_app/widgets/text_input_container.dart';
@@ -13,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
-  UserModel user;
-  SearchPage({Key? key, required this.user}) : super(key: key);
-
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -26,7 +19,6 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<UserModel> searchList = [];
   List<String> searchListUid = [];
-  bool _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
                 await membershipProvider.searchUsers(_searchController.text);
             setState(() {
               for (var user in list) {
-                if (!searchListUid.contains(user.uid)){
+                if (!searchListUid.contains(user.uid)) {
                   searchList.add(user);
                   searchListUid.add(user.uid);
                 }
@@ -79,27 +71,14 @@ class _SearchPageState extends State<SearchPage> {
                               .contains(membershipProvider.user.uid)) {
                             selectedUsers.add(membershipProvider.user.uid);
                           }
-                          var grp = await getGroupConversation(selectedUsers);
-                          if (grp == null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateGroupPage(
-                                  users: selectedUsers,
-                                ),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CreateGroupPage(
+                                users: selectedUsers,
                               ),
-                            );
-                          } else {
-                            // var channelModel = await getChannelModel(grp);
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ChatPage(
-                            //       conversation: channelModel,
-                            //     ),
-                            //   ),
-                            // );
-                          }
+                            ),
+                          );
                         }
                       },
                       child: Container(
@@ -136,7 +115,6 @@ class _SearchPageState extends State<SearchPage> {
                       setState(() {
                         selectedUsers.add(uid);
                       });
-                      print(multiSelect);
                     }),
                     onTap: () async {
                       if (multiSelect) {
@@ -149,23 +127,19 @@ class _SearchPageState extends State<SearchPage> {
                               multiSelect = false;
                             }
                           }
-                          print(selectedUsers);
                         });
                       } else {
-                        // String chatID = await getOrCreateDMConversation(
-                        //     membershipProvider.user.uid, uid);
-                        // UserModel otherUser = await getUserModel(uid);
-                        // ChannelModel channelModel =
-                        //     await getChannelModel(chatID);
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ChatPage(
-                        //       conversation: channelModel,
-                        //       otherUser: otherUser,
-                        //     ),
-                        //   ),
-                        // );
+                        ChannelProvider channelProvider =
+                            Provider.of<ChannelProvider>(context,
+                                listen: false);
+                        channelProvider.setCurrentUser(membershipProvider.user);
+                        await channelProvider.checkDMChannel(uid);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatPage(),
+                          ),
+                        );
                       }
                     },
                     leading: CircleAvatar(
@@ -179,12 +153,6 @@ class _SearchPageState extends State<SearchPage> {
                         style: const TextStyle(color: Colors.white)),
                   );
                 },
-              ),
-            ),
-          if (_isSearching)
-            const Expanded(
-              child: Center(
-                child: CircularProgressIndicator(),
               ),
             ),
         ]),

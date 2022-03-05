@@ -9,6 +9,8 @@ Color kAccentColor = const Color(0xff007BDB);
 // Color kSecondaryColor = Color.fromARGB(255, 223, 223, 223);
 // Color kAccentColor = const Color(0xff007BDB);
 
+RegExp kUrlRegEx = RegExp("(www|http:|https:)+[^\s]+[\w]");
+
 TextStyle kHeadingTextStyle = const TextStyle(
   fontSize: 20,
   color: Colors.white,
@@ -30,7 +32,33 @@ TextStyle kSubTextStyle = const TextStyle(
   color: Colors.white,
 );
 
-InputDecoration kInputDecoration (String hintText) {
+BoxDecoration kSelfMessageBoxDecoration = const BoxDecoration(
+  color: Color(0xff606082),
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(7),
+    bottomLeft: Radius.circular(7),
+    topRight: Radius.circular(2),
+    bottomRight: Radius.circular(7),
+  ),
+  boxShadow: [
+    BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
+  ],
+);
+
+BoxDecoration kOtherMessageBoxDecoration = const BoxDecoration(
+  color: Color(0xff3B3B51),
+  borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(2),
+    bottomLeft: Radius.circular(7),
+    topRight: Radius.circular(7),
+    bottomRight: Radius.circular(7),
+  ),
+  boxShadow: [
+    BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
+  ],
+);
+
+InputDecoration kInputDecoration(String hintText) {
   return InputDecoration(
     hintText: hintText,
     labelStyle: const TextStyle(

@@ -1,6 +1,5 @@
 import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/user/user_sign_in.dart';
 import 'package:chat_app/themes/theme.dart';
 import 'package:chat_app/views/home_page.dart';
 import 'package:chat_app/views/membership/login_page.dart';

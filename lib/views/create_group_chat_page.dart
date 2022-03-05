@@ -1,12 +1,8 @@
 import 'dart:io';
 
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/modals/chat_modals.dart';
 import 'package:chat_app/providers/channel.dart';
 import 'package:chat_app/providers/user.dart';
-import 'package:chat_app/services/get_modals.dart';
-import 'package:chat_app/services/group_conversation.dart';
-import 'package:chat_app/services/upload_image.dart';
 import 'package:chat_app/utils/validation_builder.dart';
 import 'package:chat_app/views/chat_page.dart';
 import 'package:chat_app/widgets/action_button.dart';
@@ -17,7 +13,7 @@ import 'package:provider/provider.dart';
 
 class CreateGroupPage extends StatefulWidget {
   late List<String> users;
-  CreateGroupPage({required this.users});
+  CreateGroupPage({Key? key, required this.users}) : super(key: key);
 
   @override
   State<CreateGroupPage> createState() => _CreateGroupPageState();
@@ -38,7 +34,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: kPrimaryColor,
-            title: Text('Create Group'),
+            title: const Text('Create Group'),
           ),
           body: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -74,7 +70,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   decoration: kInputDecoration("Group Name"),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextInputContainer(
                 icon: Icons.people,
                 child: TextFormField(
@@ -96,16 +92,14 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                           ),
                         );
                       }
-                      var uid = await createGroupConversation(
-                          widget.users, name, "", description);
-                      await updateGroupImage(image, uid[0], uid[1]);
-
-                      ChannelModel channel = await getChannelModel(uid[0]);
-                      //TODO 
+                      var channel = await channelProvider.createGrpChannel(
+                          widget.users, name, description, image);
+                      await channelProvider.setChannel(channel.uid, null, name);
+                      channelProvider.setCurrentUser(membershipProvider.user);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatPage(),
+                          builder: (context) => const ChatPage(),
                         ),
                       );
                     },

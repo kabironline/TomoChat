@@ -1,8 +1,4 @@
-import 'dart:math';
-
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/modals/user_modals.dart';
-import 'package:chat_app/services/get_modals.dart';
 import 'package:chat_app/services/user/check_user_exists.dart';
 import 'package:chat_app/utils/validation_builder.dart';
 import 'package:chat_app/views/home_page.dart';
@@ -23,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   late String phoneNumber;
   late String OTP;
   late String verificationId;
-  bool OTPSent = false;
+  bool otpSent = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: kInputDecoration("+910123456789"),
               ),
             ),
-            if (OTPSent)
+            if (otpSent)
               TextInputContainer(
                 icon: Icons.phone,
                 child: TextFormField(
@@ -70,14 +66,14 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ActionButton(
               onPressed: () async {
-                if (!OTPSent) {
+                if (!otpSent) {
                   verifyNumber();
                 } else {
                   verifyOTP();
                 }
               },
               icon: Icons.phone_callback,
-              text: (!OTPSent ? "Send OTP" : "Verify OTP"),
+              text: (!otpSent ? "Send OTP" : "Verify OTP"),
             ),
           ],
         ),
@@ -102,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
       codeSent: (String verificationId, int? resendToken) async {
         setState(() {
           this.verificationId = verificationId;
-          OTPSent = true;
+          otpSent = true;
         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
@@ -115,7 +111,6 @@ class _LoginPageState extends State<LoginPage> {
     UserCredential value =
         await FirebaseAuth.instance.signInWithCredential(credential);
     if (await checkUserExists(value.user!.uid)) {
-      UserModel userDetails = await getUserModel(value.user!.uid);
       
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => const HomePage()));
