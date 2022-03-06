@@ -8,7 +8,7 @@ import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/group_conversation.dart';
 import 'package:TomoChat/services/messages/send_message.dart';
 import 'package:TomoChat/services/upload_image.dart';
-import 'package:TomoChat/services/user/retrive_userdata.dart';
+import 'package:TomoChat/services/user/get_userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

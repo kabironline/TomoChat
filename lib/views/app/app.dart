@@ -1,6 +1,7 @@
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/themes/theme.dart';
+import 'package:TomoChat/utils/contact_info.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/views/membership/login_page.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ class TomoApp extends StatefulWidget {
 
 class _TomoAppState extends State<TomoApp> {
   bool? _loggedIn;
-  // Future<Widget?> userSignedIn() async {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -28,6 +28,9 @@ class _TomoAppState extends State<TomoApp> {
         theme: getApplicationTheme(context),
         home: Consumer<MembershipProvider>(
           builder: (context, membership, _) {
+            askPermissions(context).then((value) {
+              
+            });
             if (_loggedIn == null) {
               membership.isLoggedIn.then((loggedIn) {
                 setState(() {

@@ -2,6 +2,7 @@ import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/services/search_user.dart';
 import 'package:TomoChat/services/user/user_sign_in.dart';
 import 'package:TomoChat/services/user/register_user.dart' as service;
+import 'package:TomoChat/services//user/get_user_contacts.dart' as service;
 import 'package:flutter/material.dart';
 
 class MembershipProvider extends ChangeNotifier {
@@ -19,6 +20,10 @@ class MembershipProvider extends ChangeNotifier {
     return _user != null;
   }
 
+  Future<List<UserModel>?> getUsersContacts () {
+    return service.getUsersContacts();
+  }
+
   /// Register the user
   /// [phone number] is the phone number of the user
   /// [uid] is the otp sent to the user
@@ -33,8 +38,9 @@ class MembershipProvider extends ChangeNotifier {
 
   /// Search for the users with the given [name]
   /// [name] is the name of the user
-  Future<List<UserModel>> searchUsers(String name) async {
+  Future<List<UserModel>?> searchUsers(String name) async {
     var users = await onSearch(name, _user!.uid);
-    return users;
+
+    return await getUsersContacts();
   }
 }
