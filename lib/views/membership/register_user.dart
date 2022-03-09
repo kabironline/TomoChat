@@ -20,6 +20,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   late String name;
   String? imageURL;
   String? email;
+  String? description;
   XFile? image;
 
   @override
@@ -66,6 +67,14 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                 });
               },
             ),
+            TextFormField(
+              decoration: const InputDecoration(labelText: 'Description'),
+              onChanged: (value) {
+                setState(() {
+                  email = value;
+                });
+              },
+            ),
             ElevatedButton(
               child: const Text('Register'),
               onPressed: () async {
@@ -74,7 +83,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                   imageURL = await uploadImage(File(image!.path), "users/${widget.uid}/profile_image");
                 }
                 await membership.registerUser(
-                    name, widget.uid, widget.phoneNumber, email, imageURL);
+                    name, widget.uid, widget.phoneNumber, email, description,imageURL);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

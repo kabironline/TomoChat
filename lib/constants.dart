@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 Color kPrimaryColor = const Color(0xff1D1D2A);
@@ -10,6 +12,8 @@ Color kAccentColor = const Color(0xff007BDB);
 // Color kAccentColor = const Color(0xff007BDB);
 
 RegExp kUrlRegEx = RegExp("(www|http:|https:)+[^\s]+[\w]");
+
+const double kDefaultPadding = 16.0;
 
 TextStyle kHeadingTextStyle = const TextStyle(
   fontSize: 20,
@@ -30,6 +34,17 @@ TextStyle kTextStyle = const TextStyle(
 TextStyle kSubTextStyle = const TextStyle(
   fontSize: 14,
   color: Colors.white,
+);
+
+BoxDecoration kAvatarBoxDecoration = BoxDecoration(
+  boxShadow: [
+    BoxShadow(
+      color: Colors.black.withOpacity(0.25),
+      blurRadius: 10,
+      offset: const Offset(0, 5),
+    ),
+  ],
+  borderRadius: BorderRadius.circular(50),
 );
 
 BoxDecoration kSelfMessageBoxDecoration = const BoxDecoration(

@@ -2,14 +2,15 @@ import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
-import 'package:TomoChat/views/chat_page.dart';
-import 'package:TomoChat/views/create_group_chat_page.dart';
+import 'package:TomoChat/views/chat/chat_page.dart';
+import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
+  const SearchPage({Key? key}) : super(key: key);
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -31,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             Future.delayed(const Duration(milliseconds: 00), () {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
+                return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
@@ -58,7 +59,6 @@ class _SearchPageState extends State<SearchPage> {
                 onPressed: () async {
                   var list = await membershipProvider
                       .searchUsers(_searchController.text);
-                  print(list);
                   setState(() {
                     for (var user in list!) {
                       if (!searchListUid.contains(user.uid)) {

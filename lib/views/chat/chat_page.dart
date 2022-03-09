@@ -3,6 +3,7 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
+import 'package:TomoChat/views/chat/chat_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -46,14 +47,31 @@ class _ChatPageState extends State<ChatPage> {
               elevation: 3,
               toolbarHeight: 60,
               backgroundColor: kPrimaryColor,
-              title: Row(children: [
-                CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  backgroundImage: NetworkImage(channelProvider.channelImage!),
-                ),
-                const SizedBox(width: 10),
-                Text(channelProvider.channelName!),
-              ]),
+              title: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatDetailPage(),
+                    ),
+                  );
+                },
+                child: Row(children: [
+                  Hero(
+                    tag: "${channelProvider.channel!.uid}-image",
+                    child: SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(channelProvider.channelImage!,fit: BoxFit.cover,),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(channelProvider.channelName!,style: kSubHeadingTextStyle,),
+                ]),
+              ),
             ),
             backgroundColor: kPrimaryColor,
             body: Column(
@@ -103,20 +121,22 @@ class _ChatPageState extends State<ChatPage> {
                     decoration = kOtherMessageBoxDecoration;
                   }
                   if (index != snapshot.data.docs.length - 1 && index != 0) {
-                    var nextMessageTime = snapshot.data.docs[index + 1].data()['time'];
+                    var nextMessageTime =
+                        snapshot.data.docs[index + 1].data()['time'];
                     var nextMessageSender =
                         snapshot.data.docs[index + 1].data()['senderId'] ==
                             snapshot.data.docs[index].data()['senderId'];
-                    var prevMessageSender = snapshot.data.docs[index - 1].data()['senderId'] ==
+                    var prevMessageSender =
+                        snapshot.data.docs[index - 1].data()['senderId'] ==
                             snapshot.data.docs[index].data()['senderId'];
                     if (convertTimeStamp(timeSent) ==
                             convertTimeStamp(nextMessageTime) &&
                         nextMessageSender) {
                       displayTime = false;
                     }
-                      if (prevMessageSender && nextMessageSender) {
-                        displayName = false;
-                      }
+                    if (prevMessageSender && nextMessageSender) {
+                      displayName = false;
+                    }
                   }
                   return Column(
                     crossAxisAlignment: alignment,
@@ -135,7 +155,8 @@ class _ChatPageState extends State<ChatPage> {
                           children: [
                             if (channelProvider.channel!.type == 'grp' &&
                                 snapshot.data.docs[index].data()['senderId'] !=
-                                    membershipProvider.user.uid && displayName)
+                                    membershipProvider.user.uid &&
+                                displayName)
                               Text(
                                   channelProvider
                                       .grpUsers[snapshot.data.docs[index]

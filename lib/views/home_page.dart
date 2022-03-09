@@ -4,7 +4,7 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/user/get_recent_channel.dart';
 import 'package:TomoChat/services/user/user_sign_out.dart';
-import 'package:TomoChat/views/chat_page.dart';
+import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -99,18 +99,13 @@ class _HomePageState extends State<HomePage> {
                         leading: Container(
                           height: 48,
                           width: 48,
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.25),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: Image.network(
-                            snapshot.data[0],
+                          decoration: kAvatarBoxDecoration,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              snapshot.data[0],
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         title: Text(
@@ -125,9 +120,9 @@ class _HomePageState extends State<HomePage> {
                           ChannelProvider channelProvider =
                               Provider.of<ChannelProvider>(context,
                                   listen: false);
+                          channelProvider.setCurrentUser(membership.user);  
                           await channelProvider.setChannel(
                               uid, snapshot.data[0], snapshot.data[1]);
-                          channelProvider.setCurrentUser(membership.user);  
                           Navigator.push(
                             context,
                             MaterialPageRoute(

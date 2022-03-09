@@ -28,18 +28,19 @@ class MembershipProvider extends ChangeNotifier {
   /// [phone number] is the phone number of the user
   /// [uid] is the otp sent to the user
   /// [name] is the name of the user
+  /// [description] is the description of the user
   /// [email] is the email of the user (optional)
   /// [imageUrl] is the image url of the user (optional)
   Future registerUser(String name, String uid, String phoneNumber,
-      String? email, String? imageUrl) async {
-    var user = await service.registerUser(name, email, phoneNumber, uid, imageUrl);
+      String? email,String? description,String? imageUrl) async {
+    var user = await service.registerUser(name, email, phoneNumber, uid, description,imageUrl);
     _user ??= user;
   }
 
   /// Search for the users with the given [name]
   /// [name] is the name of the user
   Future<List<UserModel>?> searchUsers(String name) async {
-    var users = await onSearch(name, _user!.uid);
+    // var users = await onSearch(name, _user!.uid);
 
     return await getUsersContacts();
   }

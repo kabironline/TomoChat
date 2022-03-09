@@ -30,6 +30,9 @@ class ChannelProvider extends ChangeNotifier {
       if (channel?.type == "grp") {
         grpUsers = await getGroupUsers();
       }
+      if (channel?.type == "dm") {
+        dmUser = await getDMOtherUser(channel!.uid, currentUser!.uid);
+      }
     } else {
       var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
       dmUser = value;
