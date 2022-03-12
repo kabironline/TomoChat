@@ -30,24 +30,23 @@ class _SearchPageState extends State<SearchPage> {
       return FutureBuilder(
           future: membershipProvider.getUsersContacts(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            Future.delayed(const Duration(milliseconds: 00), () {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              setState(() {
-                if (snapshot.hasData &&
-                    !searchDone &&
-                    snapshot.connectionState == ConnectionState.done) {
-                  searchList = snapshot.data;
-                  for (String uid in snapshot.data.uid) {
-                    searchListUid.add(uid);
-                  }
-                  searchDone = true;
+            // Future.delayed(const Duration(milliseconds: 200), () {
+            
+            if (snapshot.hasData &&
+                !searchDone &&
+                snapshot.connectionState == ConnectionState.done)  {
+                searchList = snapshot.data;
+                if (searchList.length > 0) {
+                  searchList.forEach((element) {
+                    searchListUid.add(element.uid);
+                  });
                 }
-              });
-            });
+                searchDone = true;
+              // setState(() {
+              // });
+            }
+            // });
+
             return Scaffold(
               backgroundColor: kPrimaryColor,
               appBar: AppBar(
@@ -124,8 +123,23 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ],
                 ),
-                if (searchList.isNotEmpty)
-                  Expanded(
+                
+                 searchDone ? _buildSearchList(context, searchList, membershipProvider) : const Center(child: CircularProgressIndicator()),
+                // RefreshIndicator(
+                //     onRefresh: () async {
+                //       await build(context);
+                //     },
+                    
+                //     child:
+                //     ),
+                  
+              ]),
+            );
+          });
+    });
+  }
+  Widget _buildSearchList (BuildContext context, List<UserModel> searchList, MembershipProvider membershipProvider) {
+    return Expanded(
                     flex: 100,
                     child: ListView.builder(
                       itemCount: searchList.length,
@@ -181,10 +195,6 @@ class _SearchPageState extends State<SearchPage> {
                         );
                       },
                     ),
-                  ),
-              ]),
-            );
-          });
-    });
+                  );
   }
 }

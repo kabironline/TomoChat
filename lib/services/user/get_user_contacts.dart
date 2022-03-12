@@ -10,7 +10,11 @@ Future<List<UserModel>?> getUsersContacts() async {
   List<String> contactsMap = [];
   for (var contact in contacts) {
     var phoneNumber = removeWhitespaces(contact.phones!.first.value.toString());
-    contactsMap.add(phoneNumber.substring(phoneNumber.length - 10));
+    try {
+      contactsMap.add(phoneNumber.substring(phoneNumber.length - 10));
+    } catch (e) {
+      continue;
+    }
   }
   for (var user in users.docs) {
     String phoneNumber = user.data()['phoneNumber'];
