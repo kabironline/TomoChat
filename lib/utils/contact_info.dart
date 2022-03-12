@@ -33,7 +33,7 @@ void handleInvalidPermissions(
 }
 
 Future<List<Contact>> getContacts() async {
-  var contact = await ContactsService.getContacts();
+  var contact = await ContactsService.getContacts(photoHighResolution: false,withThumbnails: false,orderByGivenName: false,androidLocalizedLabels: false,iOSLocalizedLabels: false);
   return contact;
 }
 

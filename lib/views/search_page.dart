@@ -36,16 +36,13 @@ class _SearchPageState extends State<SearchPage> {
                 !searchDone &&
                 snapshot.connectionState == ConnectionState.done)  {
                 searchList = snapshot.data;
-                if (searchList.length > 0) {
-                  searchList.forEach((element) {
+                if (searchList.isNotEmpty) {
+                  for (var element in searchList) {
                     searchListUid.add(element.uid);
-                  });
+                  }
                 }
                 searchDone = true;
-              // setState(() {
-              // });
             }
-            // });
 
             return Scaffold(
               backgroundColor: kPrimaryColor,
