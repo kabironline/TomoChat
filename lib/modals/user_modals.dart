@@ -5,13 +5,13 @@ class UserModel {
   String name;
   String image;
   DateTime createdAt;
-  String? phoneNumber;
+  String phoneNumber;
   String? description;
   String uid;
 
   UserModel({
     this.email,
-    this.phoneNumber,
+    required this.phoneNumber,
     required this.description,
     required this.name,
     required this.image,
@@ -39,7 +39,7 @@ class UserModel {
       email: map['email'] ?? "",
       uid: map['uid'],
       description: map['description'],
-      phoneNumber: map['phoneNumber'] ?? "",
+      phoneNumber: map['phoneNumber'],
     );
   }
 }

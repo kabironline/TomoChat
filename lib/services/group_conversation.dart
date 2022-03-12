@@ -1,7 +1,8 @@
+import 'package:TomoChat/modals/user_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-Future<List<String>> createGroupConversation(List<String> users, String name, String image, String description) async {
+Future<List<String>> createGroupConversation(List<String> users, String name, String image, String description, String adminUser) async {
   String dmId = generateDMId(users);
   var result = await FirebaseFirestore.instance.collection('channels').add({
     'users': users,
@@ -14,6 +15,7 @@ Future<List<String>> createGroupConversation(List<String> users, String name, St
     'recentChatId': '',
     'name': name,
     'image': image,
+    'admins': [adminUser],
     'description': description,
   });
      var recentChatId = await FirebaseFirestore.instance.collection('recentChat').add({

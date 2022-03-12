@@ -37,9 +37,13 @@ class _SearchPageState extends State<SearchPage> {
                 );
               }
               setState(() {
-                if (snapshot.hasData && !searchDone &&
+                if (snapshot.hasData &&
+                    !searchDone &&
                     snapshot.connectionState == ConnectionState.done) {
                   searchList = snapshot.data;
+                  for (String uid in snapshot.data.uid) {
+                    searchListUid.add(uid);
+                  }
                   searchDone = true;
                 }
               });
@@ -172,7 +176,7 @@ class _SearchPageState extends State<SearchPage> {
                             searchList[index].name,
                             style: const TextStyle(color: Colors.white),
                           ),
-                          subtitle: Text(searchList[index].phoneNumber ?? "",
+                          subtitle: Text(searchList[index].phoneNumber,
                               style: const TextStyle(color: Colors.white)),
                         );
                       },

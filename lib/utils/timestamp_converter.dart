@@ -10,3 +10,20 @@ String convertTimeStamp(Timestamp timestamp) {
   }
   return time;
 }
+
+String getDate(Timestamp timestamp) {
+  var timeStamp = timestamp.toDate();
+  String date;
+  if (timeStamp.day.toString().length == 1) {
+    date = '0' + timeStamp.day.toString();
+  } else {
+    date = timeStamp.day.toString();
+  }
+  if (timeStamp.month.toString().length == 1) {
+    date = date + '/' + '0' + timeStamp.month.toString();
+  } else {
+    date = date + '/' + timeStamp.month.toString();
+  }
+  date = date + '/' + timeStamp.year.toString();
+  return date;
+}

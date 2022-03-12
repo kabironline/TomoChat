@@ -29,6 +29,7 @@ class ChannelProvider extends ChangeNotifier {
       channelName = name ?? channel?.name;
       if (channel?.type == "grp") {
         grpUsers = await getGroupUsers();
+        grpUsers[currentUser!.uid] = currentUser!;
       }
       if (channel?.type == "dm") {
         dmUser = await getDMOtherUser(channel!.uid, currentUser!.uid);
@@ -82,7 +83,7 @@ class ChannelProvider extends ChangeNotifier {
   Future<ChannelModel> createGrpChannel(
       List<String> users, String name, String? description, File? image) async {
     var uids =
-        await createGroupConversation(users, name, "", description ?? "");
+        await createGroupConversation(users, name, "", description ?? "",currentUser! .uid);
     await updateGroupImage(image, uids[0], uids[1]);
     return await getChannelModel(uids[0]);
   }

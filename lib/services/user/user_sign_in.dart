@@ -17,7 +17,7 @@ Future<UserModel?> signInWithPhone() async {
     user.name,
     user.uid,
     user.image,
-    user.phoneNumber ?? "",
+    user.phoneNumber,
     user.email ?? "",
     user.createdAt.toIso8601String()
   ]);
@@ -36,7 +36,7 @@ Future<UserModel?> signInWithUID(String uid) async {
     user.name,
     user.uid,
     user.image,
-    user.phoneNumber ?? "",
+    user.phoneNumber,
     user.email ?? "",
     user.createdAt.toIso8601String()
   ]);
