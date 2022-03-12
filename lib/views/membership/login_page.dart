@@ -1,4 +1,5 @@
 import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/user/check_user_exists.dart';
 import 'package:TomoChat/utils/validation_builder.dart';
 import 'package:TomoChat/views/home_page.dart';
@@ -7,6 +8,7 @@ import 'package:TomoChat/widgets/action_button.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -108,12 +110,13 @@ class _LoginPageState extends State<LoginPage> {
   void verifyOTP() async {
     final AuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: OTP);
-    UserCredential value =
+    UserCredential value = 
         await FirebaseAuth.instance.signInWithCredential(credential);
     if (await checkUserExists(value.user!.uid)) {
-      
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const HomePage()));
+      MembershipProvider membershipProvider = Provider.of<MembershipProvider>(context, listen: false);
+      await membershipProvider.logInUser(value.user!.uid);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
       Navigator.pushReplacement(
         context,

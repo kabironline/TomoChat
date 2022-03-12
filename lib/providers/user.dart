@@ -1,5 +1,7 @@
 import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/get_modals.dart';
 import 'package:TomoChat/services/search_user.dart';
+import 'package:TomoChat/services/user/set_userdata.dart';
 import 'package:TomoChat/services/user/user_sign_in.dart';
 import 'package:TomoChat/services/user/register_user.dart' as service;
 import 'package:TomoChat/services//user/get_user_contacts.dart' as service;
@@ -20,8 +22,15 @@ class MembershipProvider extends ChangeNotifier {
     return _user != null;
   }
 
-  Future<List<UserModel>?> getUsersContacts () {
+  Future<List<UserModel>?> getUsersContacts() {
     return service.getUsersContacts();
+  }
+
+  Future<UserModel?> logInUser(String? uid) async {
+    try {
+      _user ??= await getUserModel(uid);
+      setLocalUser(_user);
+    } catch (e) {}
   }
 
   /// Register the user
@@ -32,8 +41,9 @@ class MembershipProvider extends ChangeNotifier {
   /// [email] is the email of the user (optional)
   /// [imageUrl] is the image url of the user (optional)
   Future registerUser(String name, String uid, String phoneNumber,
-      String? email,String? description,String? imageUrl) async {
-    var user = await service.registerUser(name, email, phoneNumber, uid, description,imageUrl);
+      String? email, String? description, String? imageUrl) async {
+    var user = await service.registerUser(
+        name, email, phoneNumber, uid, description, imageUrl);
     _user ??= user;
   }
 

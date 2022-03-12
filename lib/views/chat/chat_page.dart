@@ -64,12 +64,18 @@ class _ChatPageState extends State<ChatPage> {
                       width: 50,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.network(channelProvider.channelImage!,fit: BoxFit.cover,),
+                        child: Image.network(
+                          channelProvider.channelImage!,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Text(channelProvider.channelName!,style: kSubHeadingTextStyle,),
+                  Text(
+                    channelProvider.channelName!,
+                    style: kSubHeadingTextStyle,
+                  ),
                 ]),
               ),
             ),
@@ -129,7 +135,9 @@ class _ChatPageState extends State<ChatPage> {
                     var prevMessageSender =
                         snapshot.data.docs[index - 1].data()['senderId'] ==
                             snapshot.data.docs[index].data()['senderId'];
-                    if (convertTimeStamp(timeSent) ==
+                    if (nextMessageTime == null) {
+                      displayTime = false;
+                    }else if (convertTimeStamp(timeSent) ==
                             convertTimeStamp(nextMessageTime) &&
                         nextMessageSender) {
                       displayTime = false;

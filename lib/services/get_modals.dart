@@ -27,7 +27,6 @@ Future<UserModel> getUserModel(var userId) async {
     createdAt: DateTime.parse(
       userId[5],
     ),
-    //TODO Store Description
-    description: "",
+    description: userId[6],
   );
 }

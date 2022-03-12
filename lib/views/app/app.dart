@@ -28,21 +28,30 @@ class _TomoAppState extends State<TomoApp> {
         theme: getApplicationTheme(context),
         home: Consumer<MembershipProvider>(
           builder: (context, membership, _) {
-            askPermissions(context).then((value) {
-              
-            });
-            if (_loggedIn == null) {
-              membership.isLoggedIn.then((loggedIn) {
-                setState(() {
-                  _loggedIn = loggedIn;
-                });
-              });
-              return const CircularProgressIndicator();
-            } else if (_loggedIn == true) {
-              return const HomePage();
-            } else {
-              return LoginPage();
-            }
+            return FutureBuilder(
+              future: askPermissions(context),
+              builder: ((context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                if (_loggedIn == null) {
+                  membership.isLoggedIn.then((loggedIn) {
+                    setState(() {
+                      _loggedIn = loggedIn;
+                    });
+                  });
+                  return const CircularProgressIndicator();
+                } else if (_loggedIn == true) {
+                  return const HomePage();
+                } else {
+                  return LoginPage();
+                }
+              }),
+            );
           },
         ),
       ),

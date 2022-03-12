@@ -52,7 +52,8 @@ Future<bool> checkIfUserSignedIn() async {
 }
 
 /// Returns the signed in user! It loads the user from the shared preferences.
-Future<UserModel> getSignedInUser() async {
+Future<UserModel?> getSignedInUser() async {
   var prefs = await SharedPreferences.getInstance();
-  return getUserModel(prefs.getStringList('user'));
+  var userData = await getUserModel(prefs.getStringList('user'));
+  return userData;
 }
