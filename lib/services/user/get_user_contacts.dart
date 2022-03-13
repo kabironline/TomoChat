@@ -1,7 +1,6 @@
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/utils/contact_info.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:contacts_service/contacts_service.dart';
 
 Future<List<UserModel>?> getUsersContacts() async {
   // var start = DateTime.now();
@@ -12,6 +11,7 @@ Future<List<UserModel>?> getUsersContacts() async {
   // print("Got Contacts ${DateTime.now().difference(start).inMilliseconds}");
   Map<String, UserModel> usersMap = {};
   List<String> contactsMap = [];
+
   for (var contact in contacts) {
     try {
       var phoneNumber = removeWhitespaces(contact.phones![0].value.toString());
@@ -20,12 +20,14 @@ Future<List<UserModel>?> getUsersContacts() async {
       continue;
     }
   }
+
   // print("Done number ${DateTime.now().difference(start).inMilliseconds}");
   for (var user in users.docs) {
     String phoneNumber = user.data()['phoneNumber'];
     usersMap[phoneNumber.substring(phoneNumber.length - 10)] =
         UserModel.fromMap(user.data());
   }
+
   // print("Done user ${DateTime.now().difference(start).inMilliseconds}");
   List<UserModel>? usersOnTomo = [];
   for (String number in usersMap.keys) {

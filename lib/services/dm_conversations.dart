@@ -39,20 +39,6 @@ Future<String> createDMConversation(String uidA, String uidB) async {
         .doc(result.id)
         .update({'recentChatId': value.id});
   });
-  await FirebaseFirestore.instance
-      .collection('users')
-      .doc(uidA)
-      .collection('channels')
-      .add({
-    'conversationId': result.id,
-  });
-  await FirebaseFirestore.instance
-      .collection('users')
-      .doc(uidB)
-      .collection('channels')
-      .add({
-    'conversationId': result.id,
-  });
   return result.id;
 }
 

@@ -1,6 +1,5 @@
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/services/get_modals.dart';
-import 'package:TomoChat/services/search_user.dart';
 import 'package:TomoChat/services/user/set_userdata.dart';
 import 'package:TomoChat/services/user/user_sign_in.dart';
 import 'package:TomoChat/services/user/register_user.dart' as service;
@@ -9,6 +8,8 @@ import 'package:flutter/material.dart';
 
 class MembershipProvider extends ChangeNotifier {
   UserModel? _user;
+
+  List<UserModel>? _contacts;
 
   /// Getter for the user
   UserModel get user {
@@ -22,15 +23,23 @@ class MembershipProvider extends ChangeNotifier {
     return _user != null;
   }
 
-  Future<List<UserModel>?> getUsersContacts() {
-    return service.getUsersContacts();
+  Future<List<UserModel>?> getUsersContacts() async {
+    _contacts ??= await service.getUsersContacts();
+    return _contacts;    
+  }
+
+  Future<List<UserModel>?> refreshContacts()async {
+    _contacts = await service.getUsersContacts();
+    return _contacts;    
   }
 
   Future<UserModel?> logInUser(String? uid) async {
     try {
       _user ??= await getUserModel(uid);
       setLocalUser(_user);
-    } catch (e) {}
+    } catch (e) {
+      //Ingoring the issue like always
+    }
   }
 
   /// Register the user
