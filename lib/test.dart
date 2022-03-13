@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:TomoChat/constants.dart';
+import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/utils/validation_builder.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:localstore/localstore.dart';
 
 class TestPage extends StatefulWidget {
@@ -11,49 +17,52 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  late String emailValue;
+  File? image;
   @override
   Widget build(BuildContext context) {
-    var store = Localstore.instance;
     return MaterialApp(
       home: Scaffold(
         body: SizedBox(
           width: double.infinity,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              FutureBuilder(
-                future: store.collection('emails').get(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return Text(snapshot.data.toString());
-                  }
-                  return const CircularProgressIndicator();
-                },
-              ),
-              TextInputContainer(
-                trailing: null,
-                icon: Icons.alternate_email,
-                width: 100,
-                heading: const Text("Email Address"),
-                child: TextFormField(
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: ValidationBuilder().email().build(),
-                  onChanged: (value) => emailValue = value,
-                  decoration: const InputDecoration.collapsed(
-                    hintText: 'Type a message',
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    var imagePicker = ImagePicker();
+                    imagePicker
+                        .pickImage(
+                            source: ImageSource.gallery, imageQuality: 70)
+                        .then((value) async {
+                      File? tempVal;
+                      tempVal =
+                          value!.path.isNotEmpty ? File(value.path) : null;
+                      tempVal = value.path.isNotEmpty
+                          ? await cropImage(tempVal!)
+                          : null;
+                      setState(() {
+                        image = tempVal;
+                      });
+                    });
+                    if (image != null) {
+                      // compressImage(image!);
+                    }
+                  },
+                  child: Container(
+                    height: 350,
+                    width: 350,
+                    color: Colors.black,
+                    child: image != null
+                        ? Image.file(image!, fit: BoxFit.cover)
+                        : Text(
+                            'No image',
+                            style: kHeadingTextStyle,
+                          ),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    store.collection('email').doc().set({
-                      'email': emailValue,
-                    });
-                  },
-                  child: const Text("Submit")),
-            ],
+              ],
+            ),
           ),
         ),
       ),
