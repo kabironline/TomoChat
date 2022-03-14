@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 class RegisterUserPage extends StatefulWidget {
   late String phoneNumber;
   late String uid;
-  RegisterUserPage({Key? key, required this.phoneNumber, required this.uid}) : super(key: key);
+  RegisterUserPage({Key? key, required this.phoneNumber, required this.uid})
+      : super(key: key);
 
   @override
   State<RegisterUserPage> createState() => _RegisterUserPageState();
@@ -21,7 +22,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
   String? imageURL;
   String? email;
   String? description;
-  XFile? image;
+  File? image;
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +35,10 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
           children: [
             const Text('Register User'),
             GestureDetector(
-              onTap: () {
-                //Use ImagePicker to get image from camera or gallery
-                setState(() async {
-                image =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
+              onTap: () async {
+                var temp = await pickAvatarImage();
+                setState(() {
+                  image = temp;
                 });
               },
               child: Container(
@@ -48,7 +48,7 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
                 //Create Image picker that picks and crops images to 1:1 ratio and uploads them to the Firebase Storage
                 child: image == null
                     ? Image.asset("assets/images/profile_default_image.jpg")
-                    : Image.file(File(image!.path)),
+                    : Image.file((image!)),
               ),
             ),
             TextFormField(
@@ -80,10 +80,11 @@ class _RegisterUserPageState extends State<RegisterUserPage> {
               onPressed: () async {
                 //Upload image to Firebase Storage
                 if (image != null) {
-                  imageURL = await uploadImage(File(image!.path), "users/${widget.uid}/profile_image");
+                  imageURL = await uploadImage(
+                      File(image!.path), "users/${widget.uid}/profile_image");
                 }
-                await membership.registerUser(
-                    name, widget.uid, widget.phoneNumber, email, description,imageURL);
+                await membership.registerUser(name, widget.uid,
+                    widget.phoneNumber, email, description, imageURL);
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(

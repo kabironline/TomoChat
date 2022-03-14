@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // MembershipProvider membership = Provider.of(context)
   @override
   Widget build(BuildContext context) {
     return Consumer<MembershipProvider>(
@@ -90,11 +91,7 @@ class _HomePageState extends State<HomePage> {
                         messageStream.data.docs[index].data()['image'],
                         messageStream.data.docs[index].data()['name']),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
+                      if (snapshot.hasData) {
                       return ListTile(
                         leading: Container(
                           height: 48,
@@ -131,6 +128,8 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       );
+                      }
+                      return Container();
                     },
                   );
                 },

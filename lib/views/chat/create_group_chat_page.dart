@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/utils/validation_builder.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/widgets/action_button.dart';
@@ -40,12 +41,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             padding: const EdgeInsets.all(24.0),
             child: Column(children: [
               GestureDetector(
-                onTap: () async {
-                  var pickedImage =
-                      await picker.pickImage(source: ImageSource.gallery);
-                  if (pickedImage == null) return;
-                  setState(() {
-                    image = File(pickedImage.path);
+                onTap: () async{
+                    var temp = await pickAvatarImage();
+                  setState(()  {
+                    image = temp;
                   });
                 },
                 child: ClipRRect(
