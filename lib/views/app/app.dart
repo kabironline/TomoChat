@@ -2,8 +2,12 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/themes/theme.dart';
 import 'package:TomoChat/utils/contact_info.dart';
+import 'package:TomoChat/views/chat/chat_detail_page.dart';
+import 'package:TomoChat/views/chat/chat_page.dart';
+import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/views/membership/login_page.dart';
+import 'package:TomoChat/views/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +29,13 @@ class _TomoAppState extends State<TomoApp> {
       ],
       child: MaterialApp(
         title: 'Tomo',
+        routes: {
+          // '/': (context) => LoginPage(),
+          '/home': (context) => HomePage(),
+          '/chat': (context) => ChatPage(),
+          '/chat/details': (context) => ChatDetailPage(),
+          '/search': (context) => SearchPage(),
+        },
         theme: getApplicationTheme(context),
         home: Consumer<MembershipProvider>(
           builder: (context, membership, _) {

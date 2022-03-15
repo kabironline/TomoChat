@@ -4,6 +4,7 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_detail_page.dart';
+import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -59,16 +60,10 @@ class _ChatPageState extends State<ChatPage> {
                 child: Row(children: [
                   Hero(
                     tag: "${channelProvider.channel!.uid}-image",
-                    child: SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: Image.network(
-                          channelProvider.channelImage!,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
+                    child: profilePictureWidget(
+                      padding: true,
+                      size: 50,
+                      imageSrc: channelProvider.channelImage!,
                     ),
                   ),
                   const SizedBox(width: 10),

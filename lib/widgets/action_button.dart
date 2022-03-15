@@ -6,17 +6,38 @@ class ActionButton extends StatelessWidget {
   IconData icon;
   String text;
   Color? color;
-  ActionButton({Key? key, required this.onPressed, required this.icon, required this.text, this.color}) : super(key: key);
+  ActionButton(
+      {Key? key,
+      required this.onPressed,
+      required this.icon,
+      required this.text,
+      this.color})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ButtonStyle(backgroundColor: MaterialStateProperty.all(color ?? kAccentColor)),
-      onPressed: () {onPressed?.call();},
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(color ?? kAccentColor),
+        elevation: MaterialStateProperty.all(10),
+      ),
+      onPressed: () {
+        onPressed?.call();
+      },
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          children: [Icon(icon,size: 24,), const SizedBox(width: 16), Text(text, style: kTextStyle,)],
+          children: [
+            Icon(
+              icon,
+              size: 24,
+            ),
+            const SizedBox(width: 16),
+            Text(
+              text,
+              style: kTextStyle,
+            )
+          ],
         ),
       ),
     );

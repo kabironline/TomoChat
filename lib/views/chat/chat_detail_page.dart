@@ -4,8 +4,11 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/widgets/action_button.dart';
+import 'package:TomoChat/widgets/grp_bottom_sheet.dart';
+import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatDetailPage extends StatefulWidget {
   ChatDetailPage({Key? key}) : super(key: key);
@@ -42,13 +45,10 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                     title: Text(channelProvider.channelName!),
                     background: Hero(
                       tag: "${channelProvider.channel!.uid}-image",
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        child: Image.network(
-                          channelProvider.channelImage!,
-                          fit: BoxFit.fitHeight,
-                        ),
+                      child: profilePictureWidget(
+                        // padding: true,
+                        size: 150,
+                        imageSrc: channelProvider.channelImage!,
                       ),
                     ),
                   ),
@@ -61,12 +61,12 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                   ),
                 if (channelProvider.channel!.type == "grp")
                   SliverList(
-                      // hasScrollBody: false,
-
-                      delegate: buildGrpDetails(
-                          context, membershipProvider, channelProvider)
-                      // child: buildGrpDetails(context, membershipProvider, channelProvider),
-                      ),
+                    delegate: buildGrpDetails(
+                      context,
+                      membershipProvider,
+                      channelProvider,
+                    ),
+                  ),
               ],
             ),
           ),
@@ -85,10 +85,19 @@ Widget buildDmDetails(BuildContext context,
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ActionButton(onPressed: () {}, icon: Icons.message, text: "Message"),
+          ActionButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icons.message,
+              text: "Message"),
           const SizedBox(width: kDefaultPadding),
           ActionButton(
-            onPressed: () {},
+            onPressed: () {
+              //TODO Add calling feature
+              var url = "tel:${channelProvider.dmUser?.phoneNumber}";
+              launch(url);
+            },
             icon: Icons.call,
             text: "   Call   ",
             color: kSecondaryColor,
@@ -111,7 +120,10 @@ Widget buildDmDetails(BuildContext context,
       if (channelProvider.dmUser?.email != null)
         const SizedBox(height: kDefaultPadding),
       if (channelProvider.dmUser?.email != null)
-        Text(channelProvider.dmUser?.email ?? "", style: kSubHeadingTextStyle),
+        Text(
+          channelProvider.dmUser?.email ?? "",
+          style: kSubHeadingTextStyle,
+        ),
       if (channelProvider.dmUser?.email != null)
         const SizedBox(height: kDefaultPadding),
     ]),
@@ -124,73 +136,41 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
       channelProvider.grpUsers.entries.toList().map((e) => e.value).toList();
   return SliverChildBuilderDelegate(
     ((context, index) {
-      return Container(
-        // color: kSecondaryColor,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: kSecondaryColor,
-        ),
-        margin: const EdgeInsets.all(kDefaultPadding),
-        // padding: const EdgeInsets.all(kDefaultPadding / 2),
-        child: ListTile(
-          onTap: () {
-            showBottomSheet(
-              context: context,
-              builder: (BuildContext context) {
-                return Container();
-              },
-            );
-          },
-          leading: CircleAvatar(
-            backgroundImage: NetworkImage(grpUsers[index].image),
-          ),
-          title: Text(grpUsers[index].name, style: kSubHeadingTextStyle),
-          subtitle: Text(
-            grpUsers[index].phoneNumber,
-            style: kSubTextStyle,
-          ),
-        ),
-      );
-    }),
-    childCount: grpUsers.length,
-  );
-}
-
-Widget buildGrpDetail(BuildContext context,
-    MembershipProvider membershipProvider, ChannelProvider channelProvider) {
-  List<UserModel> grpUsers =
-      channelProvider.grpUsers.entries.toList().map((e) => e.value).toList();
-  return Container(
-    padding: const EdgeInsets.all(kDefaultPadding),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Members", style: kHeadingTextStyle),
-        const SizedBox(height: kDefaultPadding),
-        Container(
-          height: MediaQuery.of(context).size.height * 0.45,
-          child: ListView.builder(
-            itemCount: channelProvider.grpUsers.length,
-            itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: kSecondaryColor,
-                  borderRadius: BorderRadius.circular(10),
+      return Column(
+        children: [
+          //Show When the group was created by the user
+          if (index == 0)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(kDefaultPadding),
+                  child: Text(
+                    "Created By : ${channelProvider.createdBy!} @ ${channelProvider.createdAt!}",
+                    style: kSubHeadingTextStyle,
+                  ),
                 ),
-                margin: EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
-                child: ListTile(
+              ],
+            ),
+          Container(
+            // color: kSecondaryColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kSecondaryColor,
+            ),
+            margin: const EdgeInsets.symmetric(
+              horizontal: kDefaultPadding,
+              vertical: kDefaultPaddingHalf,
+            ),
+            child: Column(
+              children: [
+                //Showing the time and by whome was the group created
+                ListTile(
                   onTap: () {
-                    showBottomSheet(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height * 0.45,
-                          child: Column(children: [
-                            
-                          ]),
-                        );
-                      },
-                    );
+                    if (grpUsers[index].uid == membershipProvider.user.uid) {
+                      return;
+                    }
+                    GrpBottomSheet(context, grpUsers[index], channelProvider);
                   },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(grpUsers[index].image),
@@ -201,12 +181,21 @@ Widget buildGrpDetail(BuildContext context,
                     grpUsers[index].phoneNumber,
                     style: kSubTextStyle,
                   ),
+                  //Checking if user is admin and if so, adding admin icon
+                  trailing: channelProvider.channel!.admins!.contains(
+                          grpUsers[index].uid)
+                      ? const Icon(
+                          Icons.verified_user,
+                          color: Colors.white,
+                        )
+                      : null,
                 ),
-              );
-            },
+              ],
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      );
+    }),
+    childCount: grpUsers.length,
   );
 }

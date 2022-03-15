@@ -1,5 +1,5 @@
 import 'package:TomoChat/modals/chat_modals.dart';
-import 'package:TomoChat/services/dm_conversations.dart';
+import 'package:TomoChat/services/chat/dm_conversations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<List<ChannelModel>> getUserChannels(String uid) async {

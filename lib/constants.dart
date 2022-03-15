@@ -12,6 +12,7 @@ Color kAccentColor = const Color(0xff007BDB);
 RegExp kUrlRegEx = RegExp("(www|http:|https:)+[^\s]+[\w]");
 
 const double kDefaultPadding = 16.0;
+const double kDefaultPaddingHalf = 8.0;
 
 TextStyle kHeadingTextStyle = const TextStyle(
   fontSize: 20,

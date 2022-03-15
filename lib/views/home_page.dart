@@ -6,7 +6,9 @@ import 'package:TomoChat/services/user/get_recent_channel.dart';
 import 'package:TomoChat/services/user/user_sign_out.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/search_page.dart';
+import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'membership/login_page.dart';
@@ -80,54 +82,54 @@ class _HomePageState extends State<HomePage> {
               }
               return ListView.builder(
                 itemCount: messageStream.data.docs.length,
+                scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
                   var type = messageStream.data.docs[index].data()['type'];
                   var uid = messageStream.data.docs[index].data()['channelId'];
+                  
                   return FutureBuilder(
                     future: getRecentChannelData(
-                        type,
-                        uid,
-                        membership.user.uid,
-                        messageStream.data.docs[index].data()['image'],
-                        messageStream.data.docs[index].data()['name']),
+                      type,
+                      uid,
+                      membership.user.uid,
+                      messageStream.data.docs[index].data()['image'],
+                      messageStream.data.docs[index].data()['name'],
+                    ),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                      return ListTile(
-                        leading: Container(
-                          height: 48,
-                          width: 48,
-                          decoration: kAvatarBoxDecoration,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              snapshot.data[0],
-                              fit: BoxFit.cover,
-                            ),
+                        return ListTile(
+                          leading: profilePictureWidget(
+                            padding: true,
+                            size: 50,
+                            imageSrc: snapshot.data[0],
                           ),
-                        ),
-                        title: Text(
-                            snapshot.data[1] ??
-                                messageStream.data.docs[index].data()['name'],
-                            style: kSubHeadingTextStyle),
-                        subtitle: Text(
-                          messageStream.data.docs[index].data()['lastMessage'],
-                          style: const TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                        onTap: ()async{
-                          ChannelProvider channelProvider =
-                              Provider.of<ChannelProvider>(context,
-                                  listen: false);
-                          channelProvider.setCurrentUser(membership.user);  
-                          await channelProvider.setChannel(
-                              uid, snapshot.data[0], snapshot.data[1]);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ChatPage(),
-                            ),
-                          );
-                        },
-                      );
+                          title: Text(
+                              snapshot.data[1] ??
+                                  messageStream.data.docs[index]
+                                      .data()['name'],
+                              style: kSubHeadingTextStyle),
+                          subtitle: Text(
+                            messageStream.data.docs[index]
+                                .data()['lastMessage'],
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
+                          onTap: () async {
+                            ChannelProvider channelProvider =
+                                Provider.of<ChannelProvider>(context,
+                                    listen: false);
+                            channelProvider.setCurrentUser(membership.user);
+                            await channelProvider.setChannel(
+                                uid, snapshot.data[0], snapshot.data[1]);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ChatPage(),
+                              ),
+                            );
+                            
+                          },
+                        );
                       }
                       return Container();
                     },

@@ -8,9 +8,10 @@ class ChannelModel {
   String? name;
   String? image;
   String? description;
+  String? createdBy;
 
   List<dynamic> users;
-  List<dynamic>? admins;
+  List<String>? admins;
 
   Timestamp createdAt;
   Timestamp lastMessageTime;
@@ -27,6 +28,7 @@ class ChannelModel {
     this.image,
     this.description,
     this.admins,
+    this.createdBy,
   });
 
   factory ChannelModel.fromDocument(DocumentSnapshot doc) {
@@ -39,10 +41,11 @@ class ChannelModel {
         lastMessageTime: doc['lastMessageTime'],
         users: doc['users'],
         uid: doc.id,
-        admins: doc['admins'] ?? [],
+        admins:  doc['admins'].cast<String>(),
         name: doc['name'] ?? "",
         image: doc['image'] ?? "",
         description: doc['description'] ?? "",
+        createdBy: doc['createdBy'] ?? "",
       );
     }
     return ChannelModel(
@@ -56,6 +59,7 @@ class ChannelModel {
         name: null,
         image: null,
         description: null,
+        createdBy: null 
       );
   }
 }
