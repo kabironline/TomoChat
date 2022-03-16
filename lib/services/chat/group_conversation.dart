@@ -1,13 +1,12 @@
+import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 Future<List<String>> createGroupConversation(List<String> users, String name,
     String image, String description, String adminUser) async {
-  String dmId = generateDMId(users);
   var result = await FirebaseFirestore.instance.collection('channels').add({
     'users': users,
     'type': 'grp',
-    'dmId': dmId,
     'lastMessage': '',
     'lastMessageTime': FieldValue.serverTimestamp(),
     'lastMessageSender': '',
@@ -37,24 +36,58 @@ Future<List<String>> createGroupConversation(List<String> users, String name,
   return [result.id, recentChatId.id];
 }
 
-Future<String?> getGroupConversation(List<String> users) async {
-  String dmId = generateDMId(users);
+//Function is used to leave the grp and if the user is admin then it will remove
+//the user from the grp and if there are no other admins
+//it will pick another user as admin
 
-  QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-      .instance
-      .collection('channels')
-      .where('type', isEqualTo: 'grp')
-      .where('dmId', isEqualTo: dmId)
-      .get();
-
-  if (snapshot.docs.isEmpty) {
-    return null;
+Future leaveGroup(ChannelModel channel, UserModel user) async {
+  if (channel.admins!.contains(user.uid)) {
+    //Removing user from admins
+    if (channel.admins!.length == 1) {
+      await FirebaseFirestore.instance
+          .collection('channels')
+          .doc(channel.uid)
+          .update({
+        'admins': [channel.users[channel.users[0] == user.uid ? 1 : 0]]
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection('channels')
+          .doc(channel.uid)
+          .update(
+              {'admins': channel.admins!.where((e) => e != user.uid).toList()});
+    }
   }
-
-  return snapshot.docs[0].id;
+  await FirebaseFirestore.instance
+      .collection('channels')
+      .doc(channel.uid)
+      .update({'users': channel.users.where((e) => e != user.uid).toList()});
+  await FirebaseFirestore.instance
+      .collection('recentChat')
+      .doc(channel.recentChatId)
+      .update({'users': channel.users.where((e) => e != user.uid).toList()});
 }
 
-String generateDMId(List<String> users) {
-  users.sort();
-  return users.join('-');
+// deleteGroup is used to delete the channel
+Future deleteGroup(ChannelModel channel) async {
+  await FirebaseFirestore.instance
+      .collection('channels')
+      .doc(channel.uid)
+      .delete();
+  await FirebaseFirestore.instance
+      .collection('recentChat')
+      .doc(channel.recentChatId)
+      .delete();
+}
+
+//addUserToGroup is used to add user(s) to the grp
+Future addUserToGroup(ChannelModel channel, List<String> users) async {
+  await FirebaseFirestore.instance
+      .collection('channels')
+      .doc(channel.uid)
+      .update({'users': channel.users + users});
+  await FirebaseFirestore.instance
+      .collection('recentChat')
+      .doc(channel.recentChatId)
+      .update({'users': channel.users + users});
 }

@@ -104,6 +104,28 @@ class ChannelProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future leaveChannel() async {
+    await leaveGroup(channel!, currentUser!);
+    await disposeChannel();
+  }
+
+  Future deleteChannel() async {
+    await deleteGroup(channel!);
+    await disposeChannel();
+  }
+
+  Future addUserToChannel(List<String> userIds) async {
+    await addUserToGroup(channel!, userIds);
+    for (var userId in userIds) {
+      if (userId != currentUser?.uid) {
+        var userDetail = await getUserModel(userId);
+        grpUsers.addEntries([MapEntry(userId, userDetail)]);
+      }
+    }
+    channel!.users.add(userIds);
+    notifyListeners();
+  }
+
   Future<ChannelModel> createGrpChannel(
       List<String> users, String name, String? description, File? image) async {
     var uids = await createGroupConversation(

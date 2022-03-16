@@ -1,15 +1,15 @@
 import 'dart:ui';
 
 import 'package:TomoChat/constants.dart';
-import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/widgets/action_button.dart';
+import 'package:TomoChat/widgets/bottom_sheet_tile.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future GrpBottomSheet(
+Future GrpUserBottomSheet(
     BuildContext context, UserModel user, ChannelProvider channel) {
   return showModalBottomSheet(
     context: context,
@@ -19,7 +19,7 @@ Future GrpBottomSheet(
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Container(
-          height: 400,
+          height: channel.isAdmin! ? 437 : 281,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,8 +58,19 @@ Future GrpBottomSheet(
                         style: kHeadingTextStyle,
                       ),
                     ),
+                     //Showing User Details
                     Padding(
-                      padding: EdgeInsets.all(kDefaultPadding),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: kDefaultPaddingHalf,
+                        horizontal: kDefaultPadding,
+                      ),
+                      child: Text(
+                        "${user.description}",
+                        style: kSubHeadingTextStyle,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(kDefaultPadding),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -84,13 +95,15 @@ Future GrpBottomSheet(
                         ],
                       ),
                     ),
-
+                    
+                    if(channel.isAdmin!)
                     BottomSheetTileWidget(
                       text: "Remove User",
                       icon: Icons.person_remove,
                       onTap: () {},
                     ),
-                    if (channel.channel!.admins!.contains(user.uid))
+                    SizedBox(height: channel.isAdmin! ? 0 : kDefaultPadding),
+                    if (channel.channel!.admins!.contains(user.uid) && channel.isAdmin!)
                       BottomSheetTileWidget(
                         text: "Remove Admin",
                         icon: Icons.remove_moderator,
@@ -99,7 +112,7 @@ Future GrpBottomSheet(
                           Navigator.pop(context);
                         },
                       ),
-                    if (!channel.channel!.admins!.contains(user.uid))
+                    if (!channel.channel!.admins!.contains(user.uid) && channel.isAdmin!)
                     BottomSheetTileWidget(
                       text: "Make Admin",
                       icon: Icons.add_moderator,
@@ -117,42 +130,4 @@ Future GrpBottomSheet(
       );
     },
   );
-}
-
-class BottomSheetTileWidget extends StatelessWidget {
-  String text;
-  IconData icon;
-  Function? onTap;
-  BottomSheetTileWidget({required this.text, required this.icon, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap!(),
-      child: Container(
-        margin: const EdgeInsets.all(kDefaultPaddingHalf),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
-          // color: kSecondaryColor,
-        ),
-        padding: const EdgeInsets.all(kDefaultPadding),
-        child: Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              icon,
-              size: 30,
-            ),
-            SizedBox(
-              width: kDefaultPadding,
-            ),
-            Text(
-              text,
-              style: kSubHeadingTextStyle,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

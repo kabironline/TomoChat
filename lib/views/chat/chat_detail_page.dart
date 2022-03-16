@@ -4,7 +4,8 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/widgets/action_button.dart';
-import 'package:TomoChat/widgets/grp_bottom_sheet.dart';
+import 'package:TomoChat/widgets/grp_options_bottom_sheet.dart';
+import 'package:TomoChat/widgets/grp_user_option_bottom_sheet.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -35,6 +36,21 @@ class ChatDetailPageState extends State<ChatDetailPage> {
             child: CustomScrollView(
               slivers: [
                 SliverAppBar(
+                  //Action Button for Admin
+                  //That is used to delete the channel or
+                  //edit channel details or leave ther channel
+                  //If the user is not an admin then the action button will be null
+                  actions: channelProvider.channel!.type == "grp"
+                    ? [
+                        IconButton(
+                          onPressed: () async {
+                            await GrpDetailBottomSheet(context,
+                                membershipProvider.user, channelProvider);
+                          },
+                          icon: const Icon(Icons.more_vert_rounded),
+                        )
+                      ]
+                    : [],
                   pinned: true,
                   floating: true,
                   expandedHeight: 175,
@@ -137,20 +153,52 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
   return SliverChildBuilderDelegate(
     ((context, index) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //Show When the group was created by the user
           if (index == 0)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(kDefaultPadding),
-                  child: Text(
-                    "Created By : ${channelProvider.createdBy!} @ ${channelProvider.createdAt!}",
-                    style: kSubHeadingTextStyle,
+            Container(
+              width: MediaQuery.of(context).size.width,
+              color: kSecondaryColor,
+              margin: const EdgeInsets.symmetric(vertical: kDefaultPadding),
+              padding: const EdgeInsets.symmetric(
+                vertical: kDefaultPadding,
+                horizontal: kDefaultPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Created by", style: kHeadingTextStyle),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: kDefaultPaddingHalf,
+                    ),
+                    child: Text(
+                      "${channelProvider.createdBy!} @ ${channelProvider.createdAt!}",
+                      style: kSubHeadingTextStyle,
+                    ),
                   ),
-                ),
-              ],
+                  if (channelProvider.channel?.description != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: kDefaultPaddingHalf),
+                      child: Text(
+                        "Description",
+                        style: kHeadingTextStyle,
+                      ),
+                    ),
+                  if (channelProvider.channel?.description != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: kDefaultPaddingHalf,
+                      ),
+                      child: Text(
+                        channelProvider.channel?.description ?? "",
+                        style: kSubHeadingTextStyle,
+                      ),
+                    ),
+                ],
+              ),
             ),
           Container(
             // color: kSecondaryColor,
@@ -170,7 +218,8 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
                     if (grpUsers[index].uid == membershipProvider.user.uid) {
                       return;
                     }
-                    GrpBottomSheet(context, grpUsers[index], channelProvider);
+                    GrpUserBottomSheet(
+                        context, grpUsers[index], channelProvider);
                   },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(grpUsers[index].image),
@@ -182,8 +231,8 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
                     style: kSubTextStyle,
                   ),
                   //Checking if user is admin and if so, adding admin icon
-                  trailing: channelProvider.channel!.admins!.contains(
-                          grpUsers[index].uid)
+                  trailing: channelProvider.channel!.admins!
+                          .contains(grpUsers[index].uid)
                       ? const Icon(
                           Icons.verified_user,
                           color: Colors.white,
