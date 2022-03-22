@@ -100,15 +100,18 @@ Future GrpUserBottomSheet(
                     BottomSheetTileWidget(
                       text: "Remove User",
                       icon: Icons.person_remove,
-                      onTap: () {},
+                      onTap: () {
+                        channel.removeUserFromGroup(user.uid);
+                        Navigator.pop(context);
+                      },
                     ),
                     SizedBox(height: channel.isAdmin! ? 0 : kDefaultPadding),
                     if (channel.channel!.admins!.contains(user.uid) && channel.isAdmin!)
                       BottomSheetTileWidget(
                         text: "Remove Admin",
                         icon: Icons.remove_moderator,
-                        onTap: () {
-                          channel.removeAdmin(user.uid);
+                        onTap: () async {
+                          await channel.removeAdmin(user.uid);
                           Navigator.pop(context);
                         },
                       ),

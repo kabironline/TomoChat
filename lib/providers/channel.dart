@@ -6,7 +6,7 @@ import 'package:TomoChat/services/chat/admin.dart';
 import 'package:TomoChat/services/chat/dm_conversations.dart';
 import 'package:TomoChat/services/get_modals.dart';
 import 'package:TomoChat/services/get_streams.dart';
-import 'package:TomoChat/services/chat/group_conversation.dart';
+import 'package:TomoChat/services/chat/group_conversation.dart' as grpService;
 import 'package:TomoChat/services/messages/send_message.dart';
 import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/services/user/get_userdata.dart';
@@ -39,7 +39,9 @@ class ChannelProvider extends ChangeNotifier {
         createdBy = grpUsers[channel!.createdBy]?.uid == currentUser?.uid
             ? "You"
             : grpUsers[channel!.createdBy]?.name;
-        createdAt = convertTimeStamp(channel!.createdAt) +" on "+ getDate(channel!.createdAt);
+        createdAt = convertTimeStamp(channel!.createdAt) +
+            " on " +
+            getDate(channel!.createdAt);
       }
       if (channel?.type == "dm") {
         dmUser = await getDMOtherUser(channel!.uid, currentUser!.uid);
@@ -50,6 +52,13 @@ class ChannelProvider extends ChangeNotifier {
       channelImage = dmUser?.image;
       channelName = dmUser?.name;
     }
+    notifyListeners();
+  }
+
+  Future updateChannel(String? name, String? description, File? image) async {
+    channel = await grpService.updateGroup(name, description, image, channel!);
+    channelName = name ?? channel?.name;
+    channelImage = image != null ? channelImage : channel?.image;
     notifyListeners();
   }
 
@@ -105,30 +114,49 @@ class ChannelProvider extends ChangeNotifier {
   }
 
   Future leaveChannel() async {
-    await leaveGroup(channel!, currentUser!);
+    await grpService.leaveGroup(channel!, currentUser!);
     await disposeChannel();
   }
 
   Future deleteChannel() async {
-    await deleteGroup(channel!);
+    await grpService.deleteGroup(channel!);
     await disposeChannel();
   }
 
   Future addUserToChannel(List<String> userIds) async {
-    await addUserToGroup(channel!, userIds);
+    //Remove Users already in the channel from the new list of users
+    userIds.removeWhere((userId) => channel!.users.contains(userId));
+    await grpService.addUserToGroup(channel!, userIds);
     for (var userId in userIds) {
       if (userId != currentUser?.uid) {
         var userDetail = await getUserModel(userId);
         grpUsers.addEntries([MapEntry(userId, userDetail)]);
       }
     }
-    channel!.users.add(userIds);
+    //Adding users indivually to the channel
+    for (var userId in userIds) {
+      if (userId != currentUser?.uid) {
+        channel!.users.add(userId);
+      }
+    }
+    notifyListeners();
+  }
+
+  Future removeUserFromGroup(String uid) async {
+    await grpService.removeUserFromGroup(channel!, uid);
+    channel!.users.remove(uid);
+    //If user is admin, remove admin role
+    if (channel!.admins!.contains(uid)) {
+      channel!.admins!.remove(uid);
+    }
+    grpUsers.remove(uid);
+
     notifyListeners();
   }
 
   Future<ChannelModel> createGrpChannel(
       List<String> users, String name, String? description, File? image) async {
-    var uids = await createGroupConversation(
+    var uids = await grpService.createGroupConversation(
         users, name, "", description ?? "", currentUser!.uid);
     await updateGroupImage(image, uids[0], uids[1]);
     return await getChannelModel(uids[0]);

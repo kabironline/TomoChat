@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   var type = messageStream.data.docs[index].data()['type'];
                   var uid = messageStream.data.docs[index].data()['channelId'];
-                  
+
                   return FutureBuilder(
                     future: getRecentChannelData(
                       type,
@@ -98,15 +98,17 @@ class _HomePageState extends State<HomePage> {
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
                         return ListTile(
-                          leading: profilePictureWidget(
-                            padding: true,
-                            size: 50,
-                            imageSrc: snapshot.data[0],
+                          leading: Hero(
+                            tag: "$uid-image",
+                            child: profilePictureWidget(
+                              padding: true,
+                              size: 50,
+                              imageSrc: snapshot.data[0],
+                            ),
                           ),
                           title: Text(
                               snapshot.data[1] ??
-                                  messageStream.data.docs[index]
-                                      .data()['name'],
+                                  messageStream.data.docs[index].data()['name'],
                               style: kSubHeadingTextStyle),
                           subtitle: Text(
                             messageStream.data.docs[index]
@@ -116,8 +118,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           onTap: () async {
                             ChannelProvider channelProvider =
-                                Provider.of<ChannelProvider>(context,
-                                    listen: false);
+                                Provider.of<ChannelProvider>(
+                              context,
+                              listen: false,
+                            );
                             channelProvider.setCurrentUser(membership.user);
                             await channelProvider.setChannel(
                                 uid, snapshot.data[0], snapshot.data[1]);
@@ -127,7 +131,6 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context) => const ChatPage(),
                               ),
                             );
-                            
                           },
                         );
                       }

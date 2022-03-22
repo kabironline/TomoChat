@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/image_funcs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 Future<List<String>> createGroupConversation(List<String> users, String name,
     String image, String description, String adminUser) async {
@@ -36,10 +40,6 @@ Future<List<String>> createGroupConversation(List<String> users, String name,
   return [result.id, recentChatId.id];
 }
 
-//Function is used to leave the grp and if the user is admin then it will remove
-//the user from the grp and if there are no other admins
-//it will pick another user as admin
-
 Future leaveGroup(ChannelModel channel, UserModel user) async {
   if (channel.admins!.contains(user.uid)) {
     //Removing user from admins
@@ -68,6 +68,25 @@ Future leaveGroup(ChannelModel channel, UserModel user) async {
       .update({'users': channel.users.where((e) => e != user.uid).toList()});
 }
 
+Future removeUserFromGroup(ChannelModel channelModel, String uid) async {
+  //Getting all the users in 'channels'
+  await FirebaseFirestore.instance
+      .collection('channels')
+      .doc(channelModel.uid)
+      .update({'users': channelModel.users.where((e) => e != uid).toList()});
+
+  //If user is admin, removing user from admins
+  await FirebaseFirestore.instance
+      .collection('channels')
+      .doc(channelModel.uid)
+      .update({'admins': channelModel.admins!.where((e) => e != uid).toList()});
+  //Removing User from the recentChat collection
+  await FirebaseFirestore.instance
+      .collection('recentChat')
+      .doc(channelModel.recentChatId)
+      .update({'users': channelModel.users.where((e) => e != uid).toList()});
+}
+
 // deleteGroup is used to delete the channel
 Future deleteGroup(ChannelModel channel) async {
   await FirebaseFirestore.instance
@@ -78,10 +97,58 @@ Future deleteGroup(ChannelModel channel) async {
       .collection('recentChat')
       .doc(channel.recentChatId)
       .delete();
+  await FirebaseStorage.instance.ref().child('group/${channel.uid}/profile').delete();
+}
+
+// updateGroup is used to update the channel
+Future<ChannelModel> updateGroup(String? name, String? description, File? image,
+    ChannelModel channel) async {
+  ChannelModel upadtedModel = channel;
+  if (name != null) {
+    upadtedModel.name = name;
+    await FirebaseFirestore.instance
+        .collection('channels')
+        .doc(channel.uid)
+        .update({'name': name});
+    await FirebaseFirestore.instance
+        .collection('recentChat')
+        .doc(channel.recentChatId)
+        .update({'name': name});
+  }
+  if (description != null) {
+    upadtedModel.description = description;
+    await FirebaseFirestore.instance
+        .collection('channels')
+        .doc(channel.uid)
+        .update({'description': description});
+    await FirebaseFirestore.instance
+        .collection('recentChat')
+        .doc(channel.recentChatId)
+        .update({'description': description});
+  }
+  if (image != null) {
+    var imageURL = await updateGroupImage(
+      image,
+      channel.uid,
+      channel.recentChatId,
+    );
+    upadtedModel.image = imageURL;
+    await FirebaseFirestore.instance
+        .collection('channels')
+        .doc(channel.uid)
+        .update({'image': image.path});
+    await FirebaseFirestore.instance
+        .collection('recentChat')
+        .doc(channel.recentChatId)
+        .update({'image': image.path});
+  }
+  return upadtedModel;
 }
 
 //addUserToGroup is used to add user(s) to the grp
 Future addUserToGroup(ChannelModel channel, List<String> users) async {
+  //Remove the users already in the grp from the list of new users
+  users = users.where((e) => !channel.users.contains(e)).toList();
   await FirebaseFirestore.instance
       .collection('channels')
       .doc(channel.uid)
