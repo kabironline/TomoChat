@@ -90,6 +90,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
 
 Widget? _buildFloatingActionButton (BuildContext context, ChannelProvider channelProvider) {
   bool isUserAdmin = channelProvider.isAdmin ?? false;
+  try {
   if (channelProvider.channel!.type == "grp" && isUserAdmin) {
     return FloatingActionButton(
 
@@ -107,7 +108,10 @@ Widget? _buildFloatingActionButton (BuildContext context, ChannelProvider channe
         ));
       },
     );
-  } 
+  } }
+  catch (e) {
+    //Doing nothing cause the channel is null after its deleted
+  }
   return null;
   }
 

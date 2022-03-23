@@ -82,8 +82,6 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                 builder: (context, channelProvider, child) {
                   return ActionButton(
                     onPressed: () async {
-                      channelProvider.createGrpChannel(
-                          widget.users, name, description, image);
                       if (name == "") {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -91,10 +89,10 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                           ),
                         );
                       }
+                      channelProvider.setCurrentUser(membershipProvider.user);
                       var channel = await channelProvider.createGrpChannel(
                           widget.users, name, description, image);
                       await channelProvider.setChannel(channel.uid, null, name);
-                      channelProvider.setCurrentUser(membershipProvider.user);
                       Navigator.push(
                         context,
                         MaterialPageRoute(

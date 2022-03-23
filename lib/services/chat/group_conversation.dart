@@ -97,7 +97,11 @@ Future deleteGroup(ChannelModel channel) async {
       .collection('recentChat')
       .doc(channel.recentChatId)
       .delete();
-  await FirebaseStorage.instance.ref().child('group/${channel.uid}/profile').delete();
+  try {
+    await FirebaseStorage.instance.ref().child('group/${channel.uid}/profile').delete();
+  }catch (e) {
+    //Doing nothing cause it throws error when there is a default pfp
+  }
 }
 
 // updateGroup is used to update the channel
@@ -133,14 +137,6 @@ Future<ChannelModel> updateGroup(String? name, String? description, File? image,
       channel.recentChatId,
     );
     upadtedModel.image = imageURL;
-    await FirebaseFirestore.instance
-        .collection('channels')
-        .doc(channel.uid)
-        .update({'image': image.path});
-    await FirebaseFirestore.instance
-        .collection('recentChat')
-        .doc(channel.recentChatId)
-        .update({'image': image.path});
   }
   return upadtedModel;
 }

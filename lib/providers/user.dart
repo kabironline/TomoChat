@@ -19,7 +19,9 @@ class MembershipProvider extends ChangeNotifier {
   Future<bool> get isLoggedIn async {
     try {
       _user ??= await getSignedInUser();
-    } catch (e) {}
+    } catch (e) {
+      //doing nothing
+    }
     return _user != null;
   }
 

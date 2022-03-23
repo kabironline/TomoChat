@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class BottomSheetTileWidget extends StatelessWidget {
   String text;
   IconData icon;
+  Color? color;
   Function? onTap;
-  BottomSheetTileWidget({required this.text, required this.icon, this.onTap});
+  BottomSheetTileWidget({this.color,required this.text, required this.icon, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class BottomSheetTileWidget extends StatelessWidget {
             Icon(
               icon,
               size: 30,
+              color: color,
             ),
             const SizedBox(
               width: kDefaultPadding,

@@ -58,7 +58,7 @@ class ChannelProvider extends ChangeNotifier {
   Future updateChannel(String? name, String? description, File? image) async {
     channel = await grpService.updateGroup(name, description, image, channel!);
     channelName = name ?? channel?.name;
-    channelImage = image != null ? channelImage : channel?.image;
+    channelImage = image != null ?channel?.image : channelImage;
     notifyListeners();
   }
 
@@ -71,8 +71,6 @@ class ChannelProvider extends ChangeNotifier {
         await getOrCreateDMConversation(currentUser!.uid, otherUser);
     await setChannel(channelId, null, null);
   }
-
-  void getGroupDetails() {}
 
   Future disposeChannel() async {
     channel = null;

@@ -4,11 +4,11 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/user/get_recent_channel.dart';
 import 'package:TomoChat/services/user/user_sign_out.dart';
+import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/search_page.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 import 'membership/login_page.dart';
@@ -113,6 +113,14 @@ class _HomePageState extends State<HomePage> {
                           subtitle: Text(
                             messageStream.data.docs[index]
                                 .data()['lastMessage'],
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 14),
+                          ),
+                          trailing: Text(
+                            messageStream.data.docs[index]
+                                .data()['lastMessageTime'] != null ? 
+                                convertTimeStamp(messageStream.data.docs[index]
+                                .data()['lastMessageTime']) : "",
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 14),
                           ),

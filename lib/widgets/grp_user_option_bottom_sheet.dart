@@ -100,8 +100,8 @@ Future GrpUserBottomSheet(
                     BottomSheetTileWidget(
                       text: "Remove User",
                       icon: Icons.person_remove,
-                      onTap: () {
-                        channel.removeUserFromGroup(user.uid);
+                      onTap: () async {
+                        await channel.removeUserFromGroup(user.uid);
                         Navigator.pop(context);
                       },
                     ),
@@ -119,8 +119,8 @@ Future GrpUserBottomSheet(
                     BottomSheetTileWidget(
                       text: "Make Admin",
                       icon: Icons.add_moderator,
-                      onTap: () {
-                        channel.addAdmin(user.uid);
+                      onTap: () async {
+                        await channel.addAdmin(user.uid);
                         Navigator.pop(context);
                       },
                     ),

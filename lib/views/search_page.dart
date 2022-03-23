@@ -171,7 +171,7 @@ class _SearchPageState extends State<SearchPage> {
                 });
               }),
               onTap: () async {
-                if (multiSelect || widget.isUserSelect!) {
+                if (multiSelect || widget.isUserSelect != null) {
                   setState(() {
                     if (!selectedUsers.contains(uid)) {
                       selectedUsers.add(uid);
