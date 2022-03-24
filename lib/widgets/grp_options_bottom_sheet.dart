@@ -16,7 +16,7 @@ Future GrpDetailBottomSheet(
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: SizedBox(
-          height: 234,
+          height: channelProvider.isAdmin! ? 234 : 156,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,12 +48,43 @@ Future GrpDetailBottomSheet(
                   icon: Icons.delete,
                   onTap: () async {
                     Navigator.pop(context);
-                    channelProvider.deleteChannel();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                      ModalRoute.withName('/chat'),
-                    );
+                    await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 3,
+                              sigmaY: 3,
+                            ),
+                            child: AlertDialog(
+                              backgroundColor: kSecondaryColor,
+                              title: Text("Delete Group", style: kHeadingTextStyle,),
+                              content: Text(
+                                  "Are you sure you want to delete this group? This action cannot be undone.", style: kSubHeadingTextStyle,),
+                              actions: [
+                                TextButton(
+                                  child: Text("Cancel", style: kSubHeadingTextStyle),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text("Delete", style: kSubHeadingTextStyle),
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    await channelProvider.deleteChannel();
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => HomePage()),
+                                      ModalRoute.withName('/chat'),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        });
                   },
                 ),
             ],

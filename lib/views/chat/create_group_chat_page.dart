@@ -41,9 +41,9 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             padding: const EdgeInsets.all(24.0),
             child: Column(children: [
               GestureDetector(
-                onTap: () async{
-                    var temp = await pickAvatarImage();
-                  setState(()  {
+                onTap: () async {
+                  var temp = await pickAvatarImage();
+                  setState(() {
                     image = temp;
                   });
                 },
@@ -93,12 +93,7 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                       var channel = await channelProvider.createGrpChannel(
                           widget.users, name, description, image);
                       await channelProvider.setChannel(channel.uid, null, name);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ChatPage(),
-                        ),
-                      );
+                      Navigator.popAndPushNamed(context, '/chat');
                     },
                     icon: Icons.people_alt,
                     text: "Create Group",

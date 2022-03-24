@@ -7,8 +7,6 @@ import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:localstore/localstore.dart';
-
 class TestPage extends StatefulWidget {
   const TestPage({Key? key}) : super(key: key);
 

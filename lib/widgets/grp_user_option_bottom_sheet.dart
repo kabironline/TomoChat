@@ -19,7 +19,7 @@ Future GrpUserBottomSheet(
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Container(
-          height: channel.isAdmin! ? 437 : 281,
+          height: channel.isAdmin! ? 437 : 291,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

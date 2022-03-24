@@ -37,7 +37,7 @@ class _TomoAppState extends State<TomoApp> {
           '/chat': (context) => const ChatPage(),
           '/profile': (context) => UserProfilePage(),
           '/chat/detail': (context) => ChatDetailPage(),
-          '/chat/edit': (context) => ChatEditPage(),
+          '/chat/edit': (context) => const ChatEditPage(),
           '/search': (context) => SearchPage(),
         },
         theme: getApplicationTheme(context),
