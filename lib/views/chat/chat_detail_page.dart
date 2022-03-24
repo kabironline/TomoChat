@@ -19,15 +19,23 @@ class ChatDetailPage extends StatefulWidget {
 }
 
 class ChatDetailPageState extends State<ChatDetailPage> {
+  bool isDefualtProfilePicture = true;
+  double height = 200;
   @override
   Widget build(BuildContext context) {
     return Consumer<MembershipProvider>(
         builder: (context, membershipProvider, child) {
       return Consumer<ChannelProvider>(
           builder: (context, channelProvider, child) {
+        if (channelProvider.channelImage != kdefualtUserProfilePicture &&
+            channelProvider.channelImage != kDefualtGroupProfilePicture) {
+          isDefualtProfilePicture = false;
+          height = MediaQuery.of(context).size.width;
+        }
         return Scaffold(
           backgroundColor: kPrimaryColor,
-          floatingActionButton: _buildFloatingActionButton(context, channelProvider), 
+          floatingActionButton:
+              _buildFloatingActionButton(context, channelProvider),
           body: SafeArea(
             child: CustomScrollView(
               slivers: [
@@ -49,7 +57,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                       : [],
                   pinned: true,
                   floating: true,
-                  expandedHeight: 175,
+                  expandedHeight: height,
                   backgroundColor: kPrimaryColor,
                   elevation: 0,
                   flexibleSpace: FlexibleSpaceBar(
@@ -57,17 +65,39 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                     title: Text(channelProvider.channelName!),
                     background: Hero(
                       tag: "${channelProvider.channel!.uid}-image",
-                      child: profilePictureWidget(
-                        // padding: true,
-                        size: 150,
-                        imageSrc: channelProvider.channelImage!,
+                      child: Container(
+                        height: height,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(channelProvider.channelImage!),
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              stops: const [0.7, 1],
+                              colors: [
+                                Colors.transparent,
+                                Color.fromRGBO(
+                                  0,
+                                  0,
+                                  0,
+                                  isDefualtProfilePicture ? 0 : 0.8,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ),
                 if (channelProvider.channel!.type == "dm")
                   SliverFillRemaining(
-                    // hasScrollBody: false,
+                    hasScrollBody: false,
                     child: buildDmDetails(
                         context, membershipProvider, channelProvider),
                   ),
@@ -88,32 +118,34 @@ class ChatDetailPageState extends State<ChatDetailPage> {
   }
 }
 
-Widget? _buildFloatingActionButton (BuildContext context, ChannelProvider channelProvider) {
+Widget? _buildFloatingActionButton(
+    BuildContext context, ChannelProvider channelProvider) {
   bool isUserAdmin = channelProvider.isAdmin ?? false;
   try {
-  if (channelProvider.channel!.type == "grp" && isUserAdmin) {
-    return FloatingActionButton(
-
-      backgroundColor: kAccentColor,
-      child: const Icon(
-        Icons.group_add,
-        color: Colors.white,
-      ),
-      onPressed: () async {
-        await Navigator.push(context, MaterialPageRoute(
-          builder: (context) => SearchPage(
-            isUserSelect: true,
-            channelProvider: channelProvider,
-          ),
-        ));
-      },
-    );
-  } }
-  catch (e) {
+    if (channelProvider.channel!.type == "grp" && isUserAdmin) {
+      return FloatingActionButton(
+        backgroundColor: kAccentColor,
+        child: const Icon(
+          Icons.group_add,
+          color: Colors.white,
+        ),
+        onPressed: () async {
+          await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SearchPage(
+                  isUserSelect: true,
+                  channelProvider: channelProvider,
+                ),
+              ));
+        },
+      );
+    }
+  } catch (e) {
     //Doing nothing cause the channel is null after its deleted
   }
   return null;
-  }
+}
 
 Widget buildDmDetails(BuildContext context,
     MembershipProvider membershipProvider, ChannelProvider channelProvider) {
@@ -179,50 +211,49 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //Show When the group was created by the user
-          if (index == 0)
-          _buildChannelDetails(context, channelProvider),
-            Container(
-              // color: kSecondaryColor,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: kSecondaryColor,
-              ),
-              margin: const EdgeInsets.symmetric(
-                horizontal: kDefaultPadding,
-                vertical: kDefaultPaddingHalf,
-              ),
-              child: Column(
-                children: [
-                  //Showing the time and by whome was the group created
-                  ListTile(
-                    onTap: () {
-                      if (grpUsers[index].uid == membershipProvider.user.uid) {
-                        return;
-                      }
-                      GrpUserBottomSheet(
-                          context, grpUsers[index], channelProvider);
-                    },
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(grpUsers[index].image),
-                    ),
-                    title:
-                        Text(grpUsers[index].name, style: kSubHeadingTextStyle),
-                    subtitle: Text(
-                      grpUsers[index].phoneNumber,
-                      style: kSubTextStyle,
-                    ),
-                    //Checking if user is admin and if so, adding admin icon
-                    trailing: channelProvider.channel!.admins!
-                            .contains(grpUsers[index].uid)
-                        ? const Icon(
-                            Icons.verified_user,
-                            color: Colors.white,
-                          )
-                        : null,
-                  ),
-                ],
-              ),
+          if (index == 0) _buildChannelDetails(context, channelProvider),
+          Container(
+            // color: kSecondaryColor,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: kSecondaryColor,
             ),
+            margin: const EdgeInsets.symmetric(
+              horizontal: kDefaultPadding,
+              vertical: kDefaultPaddingHalf,
+            ),
+            child: Column(
+              children: [
+                //Showing the time and by whome was the group created
+                ListTile(
+                  onTap: () {
+                    if (grpUsers[index].uid == membershipProvider.user.uid) {
+                      return;
+                    }
+                    GrpUserBottomSheet(
+                        context, grpUsers[index], channelProvider);
+                  },
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(grpUsers[index].image),
+                  ),
+                  title:
+                      Text(grpUsers[index].name, style: kSubHeadingTextStyle),
+                  subtitle: Text(
+                    grpUsers[index].phoneNumber,
+                    style: kSubTextStyle,
+                  ),
+                  //Checking if user is admin and if so, adding admin icon
+                  trailing: channelProvider.channel!.admins!
+                          .contains(grpUsers[index].uid)
+                      ? const Icon(
+                          Icons.verified_user,
+                          color: Colors.white,
+                        )
+                      : null,
+                ),
+              ],
+            ),
+          ),
         ],
       );
     }),
@@ -230,7 +261,8 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
   );
 }
 
-Widget _buildChannelDetails(BuildContext context, ChannelProvider channelProvider) {
+Widget _buildChannelDetails(
+    BuildContext context, ChannelProvider channelProvider) {
   return Container(
     width: MediaQuery.of(context).size.width,
     color: kSecondaryColor,

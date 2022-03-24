@@ -52,8 +52,7 @@ Future updateGroupImage(File? image, String uid, String recentChatId) async {
   if (image?.path == "" ||
       image == null ||
       !url.startsWith('https://firebasestorage.googleapis.com/v0/b/')) {
-    url =
-        "https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/group_default_image.png?alt=media&token=f3f0180b-6f51-424a-9d5d-be7e8cfe3ff4";
+    url = kDefualtGroupProfilePicture;
   }
 
   await FirebaseFirestore.instance

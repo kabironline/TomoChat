@@ -117,6 +117,8 @@ class _HomePageState extends State<HomePage> {
                           subtitle: Text(
                             messageStream.data.docs[index]
                                 .data()['lastMessage'],
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 14),
                           ),

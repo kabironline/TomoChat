@@ -9,7 +9,11 @@ Color kAccentColor = const Color(0xff007BDB);
 // Color kSecondaryColor = Color.fromARGB(255, 223, 223, 223);
 // Color kAccentColor = const Color(0xff007BDB);
 
-RegExp kUrlRegEx = RegExp("(www|http:|https:)+[^\s]+[\w]");
+const String kdefualtUserProfilePicture =
+    'https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/default%20profile%20picture.jpg?alt=media&token=bbcc2a67-b153-4944-a627-c214b0812834';
+
+const String kDefualtGroupProfilePicture =
+    "https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/group_default_image.png?alt=media&token=f3f0180b-6f51-424a-9d5d-be7e8cfe3ff4";
 
 const double kDefaultPadding = 16.0;
 const double kDefaultPaddingHalf = 8.0;
