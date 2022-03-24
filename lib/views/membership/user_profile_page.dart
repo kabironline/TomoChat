@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/image_funcs.dart';
+import 'package:TomoChat/views/membership/login_page.dart';
 import 'package:TomoChat/widgets/action_button.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
@@ -44,6 +46,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     return Consumer<MembershipProvider>(
       builder: (context, membershipProvider, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: kPrimaryColor,
           appBar: AppBar(
             actions: [
@@ -62,7 +65,49 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   },
                   icon: const Icon(Icons.restore),
                 ),
-              )
+              ),
+              IconButton(
+                  onPressed: ()async {
+                    //Sign out button with dialgog box for confirmation
+                    await showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (context) => BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          backgroundColor: kSecondaryColor,
+                          title: Text("Sign Out", style: kHeadingTextStyle),
+                          content:
+                              Text("Are you sure you want to sign out?", style: kSubHeadingTextStyle,),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("Cancel", style: kSubHeadingTextStyle),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                membershipProvider.signOutUser();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                  ModalRoute.withName('/home'),
+                                );
+                              },
+                              child: Text("Sign Out", style: kSubHeadingTextStyle,),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.exit_to_app)),
             ],
             elevation: 0,
             backgroundColor: kPrimaryColor,
@@ -130,7 +175,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _buildSaveButton(MembershipProvider membershipProvider) {
     return AnimatedOpacity(
       opacity: isEdited ? 1 : 0,
-      duration: Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 200),
       child: ActionButton(
         onPressed: () {
           if (isEdited) {

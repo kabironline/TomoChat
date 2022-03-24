@@ -7,6 +7,7 @@ import 'package:TomoChat/services/user/user_sign_in.dart';
 import 'package:TomoChat/services/user/register_user.dart' as service;
 import 'package:TomoChat/services//user/get_user_contacts.dart' as service;
 import 'package:TomoChat/services/user/update_user.dart' as service;
+import 'package:TomoChat/services/user/user_sign_out.dart';
 import 'package:flutter/material.dart';
 
 class MembershipProvider extends ChangeNotifier {
@@ -28,16 +29,6 @@ class MembershipProvider extends ChangeNotifier {
     return _user != null;
   }
 
-  Future<List<UserModel>?> getUsersContacts() async {
-    contacts ??= await service.getUsersContacts();
-    return contacts;    
-  }
-
-  Future<List<UserModel>?> refreshContacts()async {
-    contacts = await service.getUsersContacts();
-    return contacts;    
-  }
-
   Future<UserModel?> logInUser(String? uid) async {
     try {
       _user ??= await getUserModel(uid);
@@ -45,6 +36,22 @@ class MembershipProvider extends ChangeNotifier {
     } catch (e) {
       //Ingoring the issue like always
     }
+  }
+
+  Future signOutUser() async {
+    // _user = null;
+    signOut();
+    // notifyListeners();
+  }
+
+  Future<List<UserModel>?> getUsersContacts() async {
+    contacts ??= await service.getUsersContacts();
+    return contacts;
+  }
+
+  Future<List<UserModel>?> refreshContacts() async {
+    contacts = await service.getUsersContacts();
+    return contacts;
   }
 
   /// Register the user
@@ -76,5 +83,6 @@ class MembershipProvider extends ChangeNotifier {
   Future updateUser(String? name, String? description, File? imageUrl) async {
     _user = await service.updateUser(name, description, imageUrl, _user!);
     setLocalUser(_user);
+    notifyListeners();
   }
 }
