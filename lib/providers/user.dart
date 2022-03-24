@@ -1,15 +1,18 @@
+import 'dart:io';
+
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/services/get_modals.dart';
 import 'package:TomoChat/services/user/set_userdata.dart';
 import 'package:TomoChat/services/user/user_sign_in.dart';
 import 'package:TomoChat/services/user/register_user.dart' as service;
 import 'package:TomoChat/services//user/get_user_contacts.dart' as service;
+import 'package:TomoChat/services/user/update_user.dart' as service;
 import 'package:flutter/material.dart';
 
 class MembershipProvider extends ChangeNotifier {
   UserModel? _user;
 
-  List<UserModel>? _contacts;
+  List<UserModel>? contacts;
 
   /// Getter for the user
   UserModel get user {
@@ -26,13 +29,13 @@ class MembershipProvider extends ChangeNotifier {
   }
 
   Future<List<UserModel>?> getUsersContacts() async {
-    _contacts ??= await service.getUsersContacts();
-    return _contacts;    
+    contacts ??= await service.getUsersContacts();
+    return contacts;    
   }
 
   Future<List<UserModel>?> refreshContacts()async {
-    _contacts = await service.getUsersContacts();
-    return _contacts;    
+    contacts = await service.getUsersContacts();
+    return contacts;    
   }
 
   Future<UserModel?> logInUser(String? uid) async {
@@ -64,5 +67,14 @@ class MembershipProvider extends ChangeNotifier {
     // var users = await onSearch(name, _user!.uid);
 
     return await getUsersContacts();
+  }
+
+  /// Update the user data
+  /// [name] is the name of the user (optional)
+  /// [description] is the description of the user (optional)
+  /// [imageUrl] is the image url of the user (optional)
+  Future updateUser(String? name, String? description, File? imageUrl) async {
+    _user = await service.updateUser(name, description, imageUrl, _user!);
+    setLocalUser(_user);
   }
 }

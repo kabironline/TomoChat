@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ChatEditPage extends StatefulWidget {
-  ChatEditPage({Key? key}) : super(key: key);
+  const ChatEditPage({Key? key}) : super(key: key);
 
   @override
   State<ChatEditPage> createState() => _ChatEditPageState();
@@ -48,19 +48,20 @@ class _ChatEditPageState extends State<ChatEditPage> {
       appBar: AppBar(
         actions: [
           AnimatedOpacity(
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             opacity: isEdited ? 1 : 0,
             child: IconButton(
-                onPressed: () {
-                  //Reset the values of image, name and description
-                  setState(() {
-                    image = null;
-                    name = channelProvider.channelName!;
-                    description = channelProvider.channel!.description!;
-                    isEdited = false;
-                  });
-                },
-                icon: Icon(Icons.restore)),
+              onPressed: () {
+                //Reset the values of image, name and description
+                setState(() {
+                  image = null;
+                  name = channelProvider.channelName!;
+                  description = channelProvider.channel!.description!;
+                  isEdited = false;
+                });
+              },
+              icon: const Icon(Icons.restore),
+            ),
           )
         ],
         backgroundColor: kPrimaryColor,

@@ -34,16 +34,20 @@ class _HomePageState extends State<HomePage> {
             title: const Text('TomoChats'),
             elevation: 0,
             actions: [
-              IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-              //Log out button
-              IconButton(
-                icon: const Icon(Icons.exit_to_app),
-                onPressed: () async {
-                  signOut();
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+              GestureDetector(
+                onTap: () async {
+                  await Navigator.pushNamed(context, '/profile');
                 },
+                child: Hero(
+                  tag: 'profile_picture',
+                  child: profilePictureWidget(
+                    padding: false,
+                    size: 35,
+                    imageSrc: membership.user.image,
+                  ),
+                ),
               ),
+              SizedBox(width: kDefaultPadding),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -118,9 +122,12 @@ class _HomePageState extends State<HomePage> {
                           ),
                           trailing: Text(
                             messageStream.data.docs[index]
-                                .data()['lastMessageTime'] != null ? 
-                                convertTimeStamp(messageStream.data.docs[index]
-                                .data()['lastMessageTime']) : "",
+                                        .data()['lastMessageTime'] !=
+                                    null
+                                ? convertTimeStamp(messageStream
+                                    .data.docs[index]
+                                    .data()['lastMessageTime'])
+                                : "",
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 14),
                           ),

@@ -4,7 +4,6 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class RegisterUserPage extends StatefulWidget {

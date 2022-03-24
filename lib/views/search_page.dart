@@ -5,13 +5,15 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
+import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
   bool? isUserSelect;
   ChannelProvider? channelProvider;
-  SearchPage({Key? key, this.isUserSelect, this.channelProvider}) : super(key: key);
+  SearchPage({Key? key, this.isUserSelect, this.channelProvider})
+      : super(key: key);
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -43,6 +45,7 @@ class _SearchPageState extends State<SearchPage> {
               searchDone = true;
             }
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: kPrimaryColor,
               appBar: AppBar(
                 elevation: 0,
@@ -122,6 +125,17 @@ class _SearchPageState extends State<SearchPage> {
               padding: const EdgeInsets.all(16),
               child: TextInputContainer(
                 child: TextFormField(
+                  onChanged: (value) {
+                    //Searching users in the list
+                    setState(() {
+                      searchList =
+                          membershipProvider.contacts!.where((element) {
+                        return element.name
+                            .toLowerCase()
+                            .contains(value.toLowerCase());
+                      }).toList();
+                    });
+                  },
                   decoration: kInputDecoration('Search People'),
                   controller: _searchController,
                 ),
@@ -195,15 +209,19 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 }
               },
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(searchList[index].image),
+              leading: profilePictureWidget(
+                size: 50,
+                padding: false,
+                imageSrc: searchList[index].image,
               ),
               title: Text(
                 searchList[index].name,
                 style: const TextStyle(color: Colors.white),
               ),
-              subtitle: Text(searchList[index].phoneNumber,
-                  style: const TextStyle(color: Colors.white)),
+              subtitle: Text(
+                searchList[index].phoneNumber,
+                style: const TextStyle(color: Colors.white),
+              ),
             );
           },
         ),

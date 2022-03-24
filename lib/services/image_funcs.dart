@@ -35,7 +35,7 @@ Future<File?> cropImage(File image) async {
 }
 
 Future<File?> pickAvatarImage() async {
-  var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+  var image = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 40);
   if (image == null) return null;
   File? croppedImage = await cropImage(File(image.path));
   if (croppedImage == null) return null;

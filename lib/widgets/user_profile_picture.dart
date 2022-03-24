@@ -9,8 +9,13 @@ class profilePictureWidget extends StatelessWidget {
   bool? isFile;
   bool? padding;
 
-  profilePictureWidget(
-      {this.padding,this.isFile, required this.size, required this.imageSrc});
+  profilePictureWidget({
+    this.padding,
+    this.isFile,
+    required this.size,
+    required this.imageSrc,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -31,8 +36,16 @@ class profilePictureWidget extends StatelessWidget {
         ],
       ),
       child: isFile != null
-          ? isFile! ? Image.file(File(imageSrc),fit: BoxFit.fitHeight) : const SizedBox()
-          : Image.network(imageSrc,fit: BoxFit.fitHeight,)
+          ? isFile!
+              ? Image.file(
+                  File(imageSrc),
+                  fit: BoxFit.fitHeight,
+                )
+              : const SizedBox()
+          : Image.network(
+              imageSrc,
+              fit: BoxFit.fitHeight,
+            ),
     );
   }
 }

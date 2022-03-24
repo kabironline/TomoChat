@@ -219,6 +219,9 @@ class _ChatPageState extends State<ChatPage> {
                   controller: chatBoxTextController,
                   maxLines: 100,
                   keyboardType: TextInputType.multiline,
+                  onChanged: (value) {
+                    print(value);
+                  },
                   decoration: const InputDecoration(
                     errorMaxLines: 0,
                     border: InputBorder.none,

@@ -8,6 +8,7 @@ import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/views/membership/login_page.dart';
+import 'package:TomoChat/views/membership/user_profile_page.dart';
 import 'package:TomoChat/views/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,9 +33,10 @@ class _TomoAppState extends State<TomoApp> {
         title: 'Tomo',
         routes: {
           // '/': (context) => LoginPage(),
-          '/home': (context) => HomePage(),
-          '/chat': (context) => ChatPage(),
-          '/chat/details': (context) => ChatDetailPage(),
+          '/home': (context) => const HomePage(),
+          '/chat': (context) => const ChatPage(),
+          '/profile': (context) => UserProfilePage(),
+          '/chat/detail': (context) => ChatDetailPage(),
           '/chat/edit': (context) => ChatEditPage(),
           '/search': (context) => SearchPage(),
         },
