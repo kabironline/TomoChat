@@ -10,6 +10,7 @@ import 'package:TomoChat/services/chat/group_conversation.dart' as grpService;
 import 'package:TomoChat/services/messages/send_message.dart';
 import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/services/user/get_userdata.dart';
+import 'package:TomoChat/utils/find_link.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -39,9 +40,7 @@ class ChannelProvider extends ChangeNotifier {
         createdBy = grpUsers[channel!.createdBy]?.uid == currentUser?.uid
             ? "You"
             : grpUsers[channel!.createdBy]?.name;
-        createdAt = convertTimeStamp(channel!.createdAt) +
-            " on " +
-            getDate(channel!.createdAt);
+        createdAt = convertTimeStamp(channel!.createdAt) + " on " + getDate(channel!.createdAt);
       }
       if (channel?.type == "dm") {
         dmUser = await getDMOtherUser(channel!.uid, currentUser!.uid);
@@ -58,7 +57,7 @@ class ChannelProvider extends ChangeNotifier {
   Future updateChannel(String? name, String? description, File? image) async {
     channel = await grpService.updateGroup(name, description, image, channel!);
     channelName = name ?? channel?.name;
-    channelImage = image != null ?channel?.image : channelImage;
+    channelImage = image != null ? channel?.image : channelImage;
     notifyListeners();
   }
 
@@ -67,8 +66,7 @@ class ChannelProvider extends ChangeNotifier {
   }
 
   Future checkDMChannel(String otherUser) async {
-    String channelId =
-        await getOrCreateDMConversation(currentUser!.uid, otherUser);
+    String channelId = await getOrCreateDMConversation(currentUser!.uid, otherUser);
     await setChannel(channelId, null, null);
   }
 
@@ -96,7 +94,32 @@ class ChannelProvider extends ChangeNotifier {
   }
 
   Future sendMessage(String text) async {
-    sendTextMessage(text.trimRight(), channel!, currentUser!);
+    var links = findLinks(text);
+    if (links == null) {
+      await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text', links);
+      return;
+    }
+    if (isOnlyLink(text)) {
+      List<String> imageLinks = [];
+      for (var link in links) {
+        if (isImageLink(link)) {
+          await sendTextMessage(text.trimRight(), channel!, currentUser!, 'media', [link]);
+          imageLinks.add(link);
+        }
+      }
+      for (var imageLink in imageLinks) {
+        links.remove(imageLink);
+      }
+      if (links.isNotEmpty) {
+        await sendTextMessage(text.trimRight(), channel!, currentUser!, 'link', links);
+      }
+      return;
+    }
+    if (isOnlyLink(text)) {
+      await sendTextMessage(text.trimRight(), channel!, currentUser!, 'link', links);
+      return;
+    }
+    await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text-link', links);
   }
 
   Future addAdmin(String userId) async {

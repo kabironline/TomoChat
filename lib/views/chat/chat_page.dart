@@ -2,11 +2,14 @@ import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
+import 'package:TomoChat/utils/find_link.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_detail_page.dart';
+import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -40,8 +43,7 @@ class _ChatPageState extends State<ChatPage> {
     });
     return Consumer<MembershipProvider>(
       builder: (context, membershipProvider, child) {
-        return Consumer<ChannelProvider>(
-            builder: (context, channelProvider, child) {
+        return Consumer<ChannelProvider>(builder: (context, channelProvider, child) {
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
@@ -91,14 +93,14 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildMessageStream(BuildContext context,
-      ChannelProvider channelProvider, MembershipProvider membershipProvider) {
+  Widget buildMessageStream(BuildContext context, ChannelProvider channelProvider,
+      MembershipProvider membershipProvider) {
     return Expanded(
       child: StreamBuilder(
         stream: getChannelStream(channelProvider.channel!.uid),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
-            return const Text('Start New Converstation');
+            return const Center(child: Text('Start New Converstation'));
           } else {
             return SizedBox(
               width: MediaQuery.of(context).size.width,
@@ -109,12 +111,15 @@ class _ChatPageState extends State<ChatPage> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (BuildContext context, int index) {
                   var timeSent = snapshot.data.docs[index].data()['time'];
+                  var msgType = snapshot.data.docs[index].data()['type'];
                   var displayTime = true;
                   var displayName = true;
                   BoxDecoration decoration;
+                  //Checking if the text contians a link and finding out the link
+                  var text = snapshot.data.docs[index].data()['text'];
+            
                   CrossAxisAlignment alignment;
-                  if (snapshot.data.docs[index].data()['senderId'] ==
-                      membershipProvider.user.uid) {
+                  if (snapshot.data.docs[index].data()['senderId'] == membershipProvider.user.uid) {
                     alignment = CrossAxisAlignment.end;
                     decoration = kSelfMessageBoxDecoration;
                   } else {
@@ -122,18 +127,14 @@ class _ChatPageState extends State<ChatPage> {
                     decoration = kOtherMessageBoxDecoration;
                   }
                   if (index != snapshot.data.docs.length - 1 && index != 0) {
-                    var nextMessageTime =
-                        snapshot.data.docs[index + 1].data()['time'];
-                    var nextMessageSender =
-                        snapshot.data.docs[index + 1].data()['senderId'] ==
-                            snapshot.data.docs[index].data()['senderId'];
-                    var prevMessageSender =
-                        snapshot.data.docs[index - 1].data()['senderId'] ==
-                            snapshot.data.docs[index].data()['senderId'];
+                    var nextMessageTime = snapshot.data.docs[index + 1].data()['time'];
+                    var nextMessageSender = snapshot.data.docs[index + 1].data()['senderId'] ==
+                        snapshot.data.docs[index].data()['senderId'];
+                    var prevMessageSender = snapshot.data.docs[index - 1].data()['senderId'] ==
+                        snapshot.data.docs[index].data()['senderId'];
                     if (nextMessageTime == null) {
                       displayTime = false;
-                    }else if (convertTimeStamp(timeSent) ==
-                            convertTimeStamp(nextMessageTime) &&
+                    } else if (convertTimeStamp(timeSent) == convertTimeStamp(nextMessageTime) &&
                         nextMessageSender) {
                       displayTime = false;
                     }
@@ -162,25 +163,40 @@ class _ChatPageState extends State<ChatPage> {
                                 displayName)
                               Text(
                                   channelProvider
-                                      .grpUsers[snapshot.data.docs[index]
-                                          .data()['senderId']]!
-                                      .name,
+                                      .grpUsers[snapshot.data.docs[index].data()['senderId']]!.name,
                                   style: kSubTextStyle),
-                            Text(
-                              snapshot.data.docs[index]['message'],
-                              style: kSubHeadingTextStyle,
-                            ),
+                            if (msgType == 'text')
+                              Text(
+                                snapshot.data.docs[index]['message'],
+                                style: kSubHeadingTextStyle,
+                              ),
+                            if (msgType == 'media')
+                              GestureDetector(
+                                  onTap: () {
+                                    MaterialPageRoute(
+                                      builder: (context) => ImageViewerPage(
+                                        imageSrc: snapshot.data.docs[index]['firstLink'],
+                                      ),
+                                    );
+                                  },
+                                  child: Image.network(snapshot.data.docs[index]['message'])),
+                            if (msgType == 'link')
+                              GestureDetector(
+                                onTap: () => launch(snapshot.data.docs[index]['message']),
+                                child: Text(
+                                  snapshot.data.docs[index]['message'],
+                                  style: kSubHeadingTextStyle,
+                                ),
+                              )
                           ],
                         ),
                       ),
                       if (displayTime)
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 16, right: 16, bottom: 8),
+                          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                           child: Text(
                             timeSent == null ? "" : convertTimeStamp(timeSent),
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ),
                     ],
@@ -203,31 +219,31 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Container(
             padding: const EdgeInsets.only(left: 16, right: 16, top: 2),
-            height:
-                40 * ('\n'.allMatches(chatBoxTextController.text).length + 1),
+            height: 40 * ('\n'.allMatches(chatBoxTextController.text).length + 1),
             decoration: BoxDecoration(
               color: kSecondaryColor,
               borderRadius: BorderRadius.circular(100),
               boxShadow: const [
                 BoxShadow(
-                    color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
+                  color: Colors.black12,
+                  blurRadius: 7,
+                  offset: Offset(0, 7),
+                )
               ],
             ),
             child: SizedBox(
               width: MediaQuery.of(context).size.width - 120,
               child: TextField(
-                  controller: chatBoxTextController,
-                  maxLines: 100,
-                  keyboardType: TextInputType.multiline,
-                  onChanged: (value) {
-                    print(value);
-                  },
-                  decoration: const InputDecoration(
-                    errorMaxLines: 0,
-                    border: InputBorder.none,
-                    isDense: true,
-                    hintText: 'Type a message',
-                  )),
+                controller: chatBoxTextController,
+                maxLines: 100,
+                keyboardType: TextInputType.multiline,
+                decoration: const InputDecoration(
+                  errorMaxLines: 0,
+                  border: InputBorder.none,
+                  isDense: true,
+                  hintText: 'Type a message',
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 8),
