@@ -9,8 +9,7 @@ import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future GrpUserBottomSheet(
-    BuildContext context, UserModel user, ChannelProvider channel) {
+Future GrpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider channel) {
   return showModalBottomSheet(
     context: context,
     elevation: 0,
@@ -39,7 +38,17 @@ Future GrpUserBottomSheet(
                         color: kPrimaryColor,
                       ),
                     ),
-                    profilePictureWidget(size: 100, imageSrc: user.image),
+                    //TODO FIX THE HERO ANIMATION NOT WORKING
+                    Hero(
+                      tag: "${user.uid}-image",
+                      child: profilePictureWidget(
+                        openImageViewer: true,
+                        padding: true,
+                        heroTag: "${user.uid}-image",
+                        size: 100,
+                        imageSrc: user.image,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -54,11 +63,11 @@ Future GrpUserBottomSheet(
                         horizontal: kDefaultPadding,
                       ),
                       child: Text(
-                        "${user.name}",
+                        user.name,
                         style: kHeadingTextStyle,
                       ),
                     ),
-                     //Showing User Details
+                    //Showing User Details
                     Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: kDefaultPaddingHalf,
@@ -95,16 +104,16 @@ Future GrpUserBottomSheet(
                         ],
                       ),
                     ),
-                    
-                    if(channel.isAdmin!)
-                    BottomSheetTileWidget(
-                      text: "Remove User",
-                      icon: Icons.person_remove,
-                      onTap: () async {
-                        await channel.removeUserFromGroup(user.uid);
-                        Navigator.pop(context);
-                      },
-                    ),
+
+                    if (channel.isAdmin!)
+                      BottomSheetTileWidget(
+                        text: "Remove User",
+                        icon: Icons.person_remove,
+                        onTap: () async {
+                          await channel.removeUserFromGroup(user.uid);
+                          Navigator.pop(context);
+                        },
+                      ),
                     SizedBox(height: channel.isAdmin! ? 0 : kDefaultPadding),
                     if (channel.channel!.admins!.contains(user.uid) && channel.isAdmin!)
                       BottomSheetTileWidget(
@@ -116,14 +125,14 @@ Future GrpUserBottomSheet(
                         },
                       ),
                     if (!channel.channel!.admins!.contains(user.uid) && channel.isAdmin!)
-                    BottomSheetTileWidget(
-                      text: "Make Admin",
-                      icon: Icons.add_moderator,
-                      onTap: () async {
-                        await channel.addAdmin(user.uid);
-                        Navigator.pop(context);
-                      },
-                    ),
+                      BottomSheetTileWidget(
+                        text: "Make Admin",
+                        icon: Icons.add_moderator,
+                        onTap: () async {
+                          await channel.addAdmin(user.uid);
+                          Navigator.pop(context);
+                        },
+                      ),
                   ],
                 ),
               ),

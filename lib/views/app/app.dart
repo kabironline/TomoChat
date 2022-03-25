@@ -7,6 +7,7 @@ import 'package:TomoChat/views/chat/chat_detail_page.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/views/home_page.dart';
+import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:TomoChat/views/membership/login_page.dart';
 import 'package:TomoChat/views/membership/user_profile_page.dart';
 import 'package:TomoChat/views/search_page.dart';
@@ -32,7 +33,6 @@ class _TomoAppState extends State<TomoApp> {
       child: MaterialApp(
         title: 'Tomo',
         routes: {
-          // '/': (context) => LoginPage(),
           '/home': (context) => const HomePage(),
           '/chat': (context) => const ChatPage(),
           '/profile': (context) => UserProfilePage(),

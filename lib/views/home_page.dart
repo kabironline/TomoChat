@@ -3,7 +3,6 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/user/get_recent_channel.dart';
-import 'package:TomoChat/services/user/user_sign_out.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/search_page.dart';
@@ -11,7 +10,6 @@ import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'membership/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -105,7 +103,9 @@ class _HomePageState extends State<HomePage> {
                           leading: Hero(
                             tag: "$uid-image",
                             child: profilePictureWidget(
-                              padding: true,
+                              openImageViewer: true,
+                              heroTag: "$uid-image",
+                              padding: false,
                               size: 50,
                               imageSrc: snapshot.data[0],
                             ),

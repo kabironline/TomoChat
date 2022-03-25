@@ -23,10 +23,8 @@ class ChatDetailPageState extends State<ChatDetailPage> {
   double height = 200;
   @override
   Widget build(BuildContext context) {
-    return Consumer<MembershipProvider>(
-        builder: (context, membershipProvider, child) {
-      return Consumer<ChannelProvider>(
-          builder: (context, channelProvider, child) {
+    return Consumer<MembershipProvider>(builder: (context, membershipProvider, child) {
+      return Consumer<ChannelProvider>(builder: (context, channelProvider, child) {
         if (channelProvider.channelImage != kdefualtUserProfilePicture &&
             channelProvider.channelImage != kDefualtGroupProfilePicture) {
           isDefualtProfilePicture = false;
@@ -34,8 +32,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
         }
         return Scaffold(
           backgroundColor: kPrimaryColor,
-          floatingActionButton:
-              _buildFloatingActionButton(context, channelProvider),
+          floatingActionButton: _buildFloatingActionButton(context, channelProvider),
           body: SafeArea(
             child: CustomScrollView(
               slivers: [
@@ -48,8 +45,8 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                       ? [
                           IconButton(
                             onPressed: () async {
-                              await GrpDetailBottomSheet(context,
-                                  membershipProvider.user, channelProvider);
+                              await GrpDetailBottomSheet(
+                                  context, membershipProvider.user, channelProvider);
                             },
                             icon: const Icon(Icons.more_vert_rounded),
                           )
@@ -98,8 +95,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                 if (channelProvider.channel!.type == "dm")
                   SliverFillRemaining(
                     hasScrollBody: false,
-                    child: buildDmDetails(
-                        context, membershipProvider, channelProvider),
+                    child: buildDmDetails(context, membershipProvider, channelProvider),
                   ),
                 if (channelProvider.channel!.type == "grp")
                   SliverList(
@@ -118,8 +114,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
   }
 }
 
-Widget? _buildFloatingActionButton(
-    BuildContext context, ChannelProvider channelProvider) {
+Widget? _buildFloatingActionButton(BuildContext context, ChannelProvider channelProvider) {
   bool isUserAdmin = channelProvider.isAdmin ?? false;
   try {
     if (channelProvider.channel!.type == "grp" && isUserAdmin) {
@@ -147,8 +142,8 @@ Widget? _buildFloatingActionButton(
   return null;
 }
 
-Widget buildDmDetails(BuildContext context,
-    MembershipProvider membershipProvider, ChannelProvider channelProvider) {
+Widget buildDmDetails(
+    BuildContext context, MembershipProvider membershipProvider, ChannelProvider channelProvider) {
   return Container(
     padding: const EdgeInsets.all(kDefaultPadding),
     width: MediaQuery.of(context).size.width,
@@ -178,33 +173,27 @@ Widget buildDmDetails(BuildContext context,
       const SizedBox(height: kDefaultPadding),
       Text("Status", style: kHeadingTextStyle),
       const SizedBox(height: kDefaultPadding),
-      Text(channelProvider.dmUser?.description ?? "",
-          style: kSubHeadingTextStyle),
+      Text(channelProvider.dmUser?.description ?? "", style: kSubHeadingTextStyle),
       const SizedBox(height: kDefaultPadding),
       Text("Phone Number", style: kHeadingTextStyle),
       const SizedBox(height: kDefaultPadding),
-      Text(channelProvider.dmUser?.phoneNumber ?? "",
-          style: kSubHeadingTextStyle),
+      Text(channelProvider.dmUser?.phoneNumber ?? "", style: kSubHeadingTextStyle),
       const SizedBox(height: kDefaultPadding),
-      if (channelProvider.dmUser?.email != null)
-        Text("Email", style: kHeadingTextStyle),
-      if (channelProvider.dmUser?.email != null)
-        const SizedBox(height: kDefaultPadding),
+      if (channelProvider.dmUser?.email != null) Text("Email", style: kHeadingTextStyle),
+      if (channelProvider.dmUser?.email != null) const SizedBox(height: kDefaultPadding),
       if (channelProvider.dmUser?.email != null)
         Text(
           channelProvider.dmUser?.email ?? "",
           style: kSubHeadingTextStyle,
         ),
-      if (channelProvider.dmUser?.email != null)
-        const SizedBox(height: kDefaultPadding),
+      if (channelProvider.dmUser?.email != null) const SizedBox(height: kDefaultPadding),
     ]),
   );
 }
 
-SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
-    MembershipProvider membershipProvider, ChannelProvider channelProvider) {
-  List<UserModel> grpUsers =
-      channelProvider.grpUsers.entries.toList().map((e) => e.value).toList();
+SliverChildBuilderDelegate buildGrpDetails(
+    BuildContext context, MembershipProvider membershipProvider, ChannelProvider channelProvider) {
+  List<UserModel> grpUsers = channelProvider.grpUsers.entries.toList().map((e) => e.value).toList();
   return SliverChildBuilderDelegate(
     ((context, index) {
       return Column(
@@ -230,21 +219,24 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
                     if (grpUsers[index].uid == membershipProvider.user.uid) {
                       return;
                     }
-                    GrpUserBottomSheet(
-                        context, grpUsers[index], channelProvider);
+                    GrpUserBottomSheet(context, grpUsers[index], channelProvider);
                   },
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(grpUsers[index].image),
+                  leading: Hero(
+                    tag: "${grpUsers[index].uid}-image",
+                    child: profilePictureWidget(
+                      padding: false,
+                      size: 50,
+                      heroTag: "${grpUsers[index].uid}-image",
+                      imageSrc: grpUsers[index].image,
+                    ),
                   ),
-                  title:
-                      Text(grpUsers[index].name, style: kSubHeadingTextStyle),
+                  title: Text(grpUsers[index].name, style: kSubHeadingTextStyle),
                   subtitle: Text(
                     grpUsers[index].phoneNumber,
                     style: kSubTextStyle,
                   ),
                   //Checking if user is admin and if so, adding admin icon
-                  trailing: channelProvider.channel!.admins!
-                          .contains(grpUsers[index].uid)
+                  trailing: channelProvider.channel!.admins!.contains(grpUsers[index].uid)
                       ? const Icon(
                           Icons.verified_user,
                           color: Colors.white,
@@ -261,8 +253,7 @@ SliverChildBuilderDelegate buildGrpDetails(BuildContext context,
   );
 }
 
-Widget _buildChannelDetails(
-    BuildContext context, ChannelProvider channelProvider) {
+Widget _buildChannelDetails(BuildContext context, ChannelProvider channelProvider) {
   return Container(
     width: MediaQuery.of(context).size.width,
     color: kSecondaryColor,
@@ -284,7 +275,7 @@ Widget _buildChannelDetails(
             style: kSubHeadingTextStyle,
           ),
         ),
-        if (channelProvider.channel?.description != null)
+        if (channelProvider.channel?.description != "")
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPaddingHalf),
             child: Text(
@@ -292,7 +283,7 @@ Widget _buildChannelDetails(
               style: kHeadingTextStyle,
             ),
           ),
-        if (channelProvider.channel?.description != null)
+        if (channelProvider.channel?.description != "")
           Padding(
             padding: const EdgeInsets.symmetric(
               vertical: kDefaultPaddingHalf,

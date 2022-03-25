@@ -209,10 +209,15 @@ class _SearchPageState extends State<SearchPage> {
                   );
                 }
               },
-              leading: profilePictureWidget(
-                size: 50,
-                padding: false,
-                imageSrc: searchList[index].image,
+              leading: Hero(
+                tag: searchList[index].uid,
+                child: profilePictureWidget(
+                  openImageViewer: true,
+                  heroTag: searchList[index].uid,
+                  size: 50,
+                  padding: false,
+                  imageSrc: searchList[index].image,
+                ),
               ),
               title: Text(
                 searchList[index].name,
