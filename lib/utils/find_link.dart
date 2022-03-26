@@ -6,7 +6,7 @@
 /// If no link is found it will return the text.
 
 List<String>? findLinks(String text) {
-  var link = RegExp(r'(?:https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]');
+  var link = RegExp(r'(?:https?|ftp)://[-a-zA-Z0-9+&@#/\-%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]');
   var matches = link.allMatches(text);
   if (matches.isEmpty) {
     return null;
@@ -43,7 +43,7 @@ bool isOnlyLink(String text) {
   return false;
 }
 bool isImageLink (String text) {
-  var checker = RegExp(r'(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(?:jpg|gif|png|webp|bmp))(?:\?([^#]*))?(?:#(.*))?');
+  var checker = RegExp(r'(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png|webp|bmp))(?:\?([^#]*))?(?:#(.*))?');
   var matches = checker.allMatches(text);
   if (matches.isEmpty) {
     return false;

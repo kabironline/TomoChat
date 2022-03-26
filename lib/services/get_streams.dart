@@ -5,7 +5,7 @@ Stream<QuerySnapshot> getChannelStream(String channelId) {
       .collection('channels')
       .doc(channelId)
       .collection('messages')
-      .orderBy('time', descending: false)
+      .orderBy('time', descending: true)
       .snapshots();
 }
 

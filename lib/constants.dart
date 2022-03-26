@@ -15,6 +15,10 @@ const String kdefualtUserProfilePicture =
 const String kDefualtGroupProfilePicture =
     "https://firebasestorage.googleapis.com/v0/b/chat-app-test-84888.appspot.com/o/group_default_image.png?alt=media&token=f3f0180b-6f51-424a-9d5d-be7e8cfe3ff4";
 
+RegExp linkRegex = RegExp(r'(?:https?|ftp)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]');
+RegExp imageLinkRegex = RegExp(
+    r'(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(?:jpg|jpeg|gif|png|webp|bmp))(?:\?([^#]*))?(?:#(.*))?');
+
 const double kDefaultPadding = 16.0;
 const double kDefaultPaddingHalf = 8.0;
 
@@ -58,9 +62,7 @@ BoxDecoration kSelfMessageBoxDecoration = const BoxDecoration(
     topRight: Radius.circular(2),
     bottomRight: Radius.circular(7),
   ),
-  boxShadow: [
-    BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
-  ],
+  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))],
 );
 
 BoxDecoration kOtherMessageBoxDecoration = const BoxDecoration(
@@ -71,9 +73,7 @@ BoxDecoration kOtherMessageBoxDecoration = const BoxDecoration(
     topRight: Radius.circular(7),
     bottomRight: Radius.circular(7),
   ),
-  boxShadow: [
-    BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))
-  ],
+  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 7, offset: Offset(0, 7))],
 );
 
 InputDecoration kInputDecoration(String hintText) {
