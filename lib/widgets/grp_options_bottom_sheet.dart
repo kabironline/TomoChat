@@ -16,18 +16,19 @@ Future GrpDetailBottomSheet(
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: SizedBox(
-          height: channelProvider.isAdmin! ? 234 : 156,
+          height: (channelProvider.isAdmin! ? 234 : 100),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BottomSheetTileWidget(
-                text: "Update Group Detail",
-                icon: Icons.edit,
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/chat/edit');
-                },
-              ),
+              if (channelProvider.isAdmin!)
+                BottomSheetTileWidget(
+                  text: "Update Group Detail",
+                  icon: Icons.edit,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/chat/edit');
+                  },
+                ),
               BottomSheetTileWidget(
                 text: "Exit Group",
                 icon: Icons.exit_to_app,

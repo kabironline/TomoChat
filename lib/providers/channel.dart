@@ -4,6 +4,7 @@ import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/services/chat/admin.dart';
 import 'package:TomoChat/services/chat/dm_conversations.dart';
+import 'package:TomoChat/services/chat/message.dart';
 import 'package:TomoChat/services/get_modals.dart';
 import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/chat/group_conversation.dart' as grpService;
@@ -120,6 +121,14 @@ class ChannelProvider extends ChangeNotifier {
       return;
     }
     await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text-link', links);
+  }
+
+  Future deleteMessage (DocumentReference messageId) async {
+    return await deleteMessageFromChannel(channel!, messageId);
+  }
+
+  Future copyMessage (String message) async {
+    return await copyMessageToChannel(message);
   }
 
   Future addAdmin(String userId) async {

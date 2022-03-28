@@ -5,8 +5,10 @@ import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_detail_page.dart';
 import 'package:TomoChat/views/image_viewer_page.dart';
+import 'package:TomoChat/widgets/message_bottom_sheet.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:any_link_preview/any_link_preview.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
             backgroundColor: kPrimaryColor,
             body: Column(
               children: [
-                SizedBox(height: kDefaultPaddingHalf),
+                const SizedBox(height: kDefaultPaddingHalf),
                 buildMessageStream(
                   context,
                   channelProvider,
@@ -118,17 +120,17 @@ class _ChatPageState extends State<ChatPage> {
                   var displayName = true;
                   var currentMessageSender = snapshot.data.docs[index].data()['senderId'];
                   String? link;
+                  late var links;
                   try {
                     link = snapshot.data.docs[index]['firstLink'];
-                  } catch (e) {
-                    link = null;
-                  }
+                    links = snapshot.data.docs[index]['links'];
+                  } catch (e) {}
                   BoxDecoration decoration;
                   //Checking if the text contians a link and finding out the link
                   String message = snapshot.data.docs[index].data()['message'] ?? "";
 
                   CrossAxisAlignment alignment;
-                  if (snapshot.data.docs[index].data()['senderId'] == membershipProvider.user.uid) {
+                  if (currentMessageSender == membershipProvider.user.uid) {
                     alignment = CrossAxisAlignment.end;
                     decoration = kSelfMessageBoxDecoration;
                   } else {
@@ -155,8 +157,33 @@ class _ChatPageState extends State<ChatPage> {
                     crossAxisAlignment: alignment,
                     children: [
                       GestureDetector(
+                        onLongPress: () {
+                          MessageBottomSheet(
+                            context,
+                            channelProvider,
+                            snapshot.data.docs[index].reference,
+                            message,
+                            channelProvider.currentUser!.uid == currentMessageSender,
+                            links,
+                          );
+                        },
                         onTap: () {
-                          if (currentMessageSender == membershipProvider.user.uid) {}
+                          if (type == "media") {
+                            return;
+                          } else if (links == null) {
+                            return;
+                          } else if (links.length > 1) {
+                            MessageBottomSheet(
+                              context,
+                              channelProvider,
+                              snapshot.data.docs[index].reference,
+                              message,
+                              channelProvider.currentUser!.uid == currentMessageSender,
+                              links,
+                            );
+                          } else {
+                            launch(message);
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -183,9 +210,12 @@ class _ChatPageState extends State<ChatPage> {
                               if (msgType == 'media')
                                 GestureDetector(
                                     onTap: () {
-                                      MaterialPageRoute(
-                                        builder: (context) => ImageViewerPage(
-                                          imageSrc: link!,
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ImageViewerPage(
+                                            imageSrc: link!,
+                                          ),
                                         ),
                                       );
                                     },
@@ -195,19 +225,16 @@ class _ChatPageState extends State<ChatPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     if (message.trim().isNotEmpty)
-                                      GestureDetector(
-                                        onTap: () {
-                                          launch(message);
-                                        },
-                                        child: Text(
-                                          message,
-                                          style: kSubHeadingTextStyle,
-                                        ),
+                                      Text(
+                                        message,
+                                        style: kSubHeadingTextStyle,
                                       ),
                                     const SizedBox(height: kDefaultPaddingHalf),
-                                    // if (AnyLinkPreview.isValidLink())
                                     AnyLinkPreview(
-                                      errorWidget: SizedBox(),
+                                      errorWidget: const SizedBox(),
+                                      // errorImage: "",
+                                      errorBody: "Unable to fetch Image",
+                                      // placeholderWidget: Center(child: Text("Loading...", style: kHeadingTextStyle)),
                                       removeElevation: true,
                                       displayDirection: uiDirection.uiDirectionHorizontal,
                                       titleStyle: kHeadingTextStyle,

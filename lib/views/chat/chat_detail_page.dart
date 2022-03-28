@@ -2,6 +2,7 @@ import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:TomoChat/views/search_page.dart';
 import 'package:TomoChat/widgets/action_button.dart';
 import 'package:TomoChat/widgets/grp_options_bottom_sheet.dart';
@@ -46,7 +47,10 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                           IconButton(
                             onPressed: () async {
                               await GrpDetailBottomSheet(
-                                  context, membershipProvider.user, channelProvider);
+                                context,
+                                membershipProvider.user,
+                                channelProvider,
+                              );
                             },
                             icon: const Icon(Icons.more_vert_rounded),
                           )
@@ -60,31 +64,44 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                   flexibleSpace: FlexibleSpaceBar(
                     // centerTitle: true,
                     title: Text(channelProvider.channelName!),
-                    background: Hero(
-                      tag: "${channelProvider.channel!.uid}-image",
-                      child: Container(
-                        height: height,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(channelProvider.channelImage!),
-                            fit: BoxFit.fitHeight,
+                    background: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageViewerPage(
+                              imageSrc: channelProvider.channelImage!,
+                              heroTag: "${channelProvider.channel!.uid}-image",
+                            ),
                           ),
-                        ),
+                        );
+                      },
+                      child: Hero(
+                        tag: "${channelProvider.channel!.uid}-image",
                         child: Container(
+                          height: height,
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              stops: const [0.7, 1],
-                              colors: [
-                                Colors.transparent,
-                                Color.fromRGBO(
-                                  0,
-                                  0,
-                                  0,
-                                  isDefualtProfilePicture ? 0 : 0.8,
-                                )
-                              ],
+                            image: DecorationImage(
+                              image: NetworkImage(channelProvider.channelImage!),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: const [0.7, 1],
+                                colors: [
+                                  Colors.transparent,
+                                  Color.fromRGBO(
+                                    0,
+                                    0,
+                                    0,
+                                    isDefualtProfilePicture ? 0 : 0.8,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

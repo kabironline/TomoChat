@@ -5,13 +5,15 @@ class BottomSheetTileWidget extends StatelessWidget {
   String text;
   IconData icon;
   Color? color;
-  Function? onTap;
-  BottomSheetTileWidget({this.color,required this.text, required this.icon, this.onTap});
+  Function onTap;
+  BottomSheetTileWidget({this.color, required this.text, required this.icon,required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTap!(),
+      onTap: () {
+        onTap();
+      },
       child: Container(
         margin: const EdgeInsets.all(kDefaultPaddingHalf),
         decoration: BoxDecoration(

@@ -29,7 +29,7 @@ class MembershipProvider extends ChangeNotifier {
     return _user != null;
   }
 
-  Future<UserModel?> logInUser(String? uid) async {
+  Future logInUser(String? uid) async {
     try {
       _user ??= await getUserModel(uid);
       setLocalUser(_user);
