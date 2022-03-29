@@ -25,9 +25,19 @@ class _ChatPageState extends State<ChatPage> {
   String? channelName;
   TextEditingController chatBoxTextController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  int messageCount = 20;
   var height = 40.0;
   @override
   void initState() {
+    _scrollController.addListener(() {
+      print(_scrollController.position.pixels == _scrollController.position.maxScrollExtent);
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        setState(() {
+          messageCount += 20;
+        });
+      }
+    });
+
     super.initState();
   }
 
@@ -39,11 +49,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance?.addPostFrameCallback((_) {
-    //   Future.delayed(const Duration(milliseconds: 300)).then((_) {
-    //     _scrollController.animateTo(_scrollController.position.maxScrollExtent,duration : Duration(milliseconds: 200),curve: Curves.easeIn);
-    //   });
-    // });
     return Consumer<MembershipProvider>(
       builder: (context, membershipProvider, child) {
         return Consumer<ChannelProvider>(builder: (context, channelProvider, child) {
@@ -106,13 +111,16 @@ class _ChatPageState extends State<ChatPage> {
           if (!snapshot.hasData) {
             return const Center(child: Text('Start New Converstation'));
           } else {
+            messageCount =
+                messageCount > snapshot.data.docs.length ? snapshot.data.docs.length : messageCount;
             return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.75,
               child: ListView.builder(
+                reverse: true,
                 controller: _scrollController,
                 shrinkWrap: true,
-                itemCount: snapshot.data.docs.length,
+                itemCount: messageCount,
                 itemBuilder: (BuildContext context, int index) {
                   var timeSent = snapshot.data.docs[index].data()['time'];
                   var msgType = snapshot.data.docs[index].data()['type'];
