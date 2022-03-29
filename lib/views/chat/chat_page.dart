@@ -8,7 +8,6 @@ import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:TomoChat/widgets/message_bottom_sheet.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:any_link_preview/any_link_preview.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,14 +29,12 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     _scrollController.addListener(() {
-      print(_scrollController.position.pixels == _scrollController.position.maxScrollExtent);
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         setState(() {
           messageCount += 20;
         });
       }
     });
-
     super.initState();
   }
 
@@ -70,7 +67,7 @@ class _ChatPageState extends State<ChatPage> {
                 child: Row(children: [
                   Hero(
                     tag: "${channelProvider.channel!.uid}-image",
-                    child: profilePictureWidget(
+                    child: ProfilePictureWidget(
                       padding: true,
                       size: 50,
                       imageSrc: channelProvider.channelImage!,
@@ -128,11 +125,14 @@ class _ChatPageState extends State<ChatPage> {
                   var displayName = true;
                   var currentMessageSender = snapshot.data.docs[index].data()['senderId'];
                   String? link;
-                  late var links;
+                  List<String>? links;
                   try {
                     link = snapshot.data.docs[index]['firstLink'];
                     links = snapshot.data.docs[index]['links'];
-                  } catch (e) {}
+                  } catch (e) {
+                    // link = null;
+                    //Doing nothing cause both value will be null either way
+                  }
                   BoxDecoration decoration;
                   //Checking if the text contians a link and finding out the link
                   String message = snapshot.data.docs[index].data()['message'] ?? "";
@@ -166,7 +166,7 @@ class _ChatPageState extends State<ChatPage> {
                     children: [
                       GestureDetector(
                         onLongPress: () {
-                          MessageBottomSheet(
+                          messageBottomSheet(
                             context,
                             channelProvider,
                             snapshot.data.docs[index].reference,
@@ -176,12 +176,12 @@ class _ChatPageState extends State<ChatPage> {
                           );
                         },
                         onTap: () {
-                          if (type == "media") {
+                          if (msgType == "media") {
                             return;
                           } else if (links == null) {
                             return;
                           } else if (links.length > 1) {
-                            MessageBottomSheet(
+                            messageBottomSheet(
                               context,
                               channelProvider,
                               snapshot.data.docs[index].reference,

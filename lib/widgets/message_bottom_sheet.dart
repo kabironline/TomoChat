@@ -8,7 +8,7 @@ import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-Future MessageBottomSheet(BuildContext context,ChannelProvider channelProvider, DocumentReference messageId,
+Future messageBottomSheet(BuildContext context,ChannelProvider channelProvider, DocumentReference messageId,
     String message, bool sender, List<dynamic>? links,) {    
   return showModalBottomSheet(
     backgroundColor: kPrimaryColor,
@@ -19,7 +19,7 @@ Future MessageBottomSheet(BuildContext context,ChannelProvider channelProvider, 
           sigmaX: 3,
           sigmaY: 3,
         ),
-        child: Container(
+        child: SizedBox(
           height: links?.isNotEmpty ?? false ? null : sender ? 160 : 80,
           child: SingleChildScrollView(
             child: Column(
@@ -58,7 +58,7 @@ Future MessageBottomSheet(BuildContext context,ChannelProvider channelProvider, 
                         link: link,
                         showMultimedia: true,
                         cache: const Duration(days: 7),
-                        placeholderWidget: Center(child: Text("Loading...")),
+                        placeholderWidget: const Center(child: Text("Loading...")),
                       ),
                     ),
               ],

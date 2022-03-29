@@ -7,7 +7,7 @@ import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/widgets/bottom_sheet_tile.dart';
 import 'package:flutter/material.dart';
 
-Future GrpDetailBottomSheet(
+Future grpDetailBottomSheet(
     BuildContext context, UserModel user, ChannelProvider channelProvider) {
   return showModalBottomSheet(
     backgroundColor: kPrimaryColor,
@@ -37,7 +37,7 @@ Future GrpDetailBottomSheet(
                   await channelProvider.leaveChannel();
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
+                    MaterialPageRoute(builder: (context) => const HomePage()),
                     ModalRoute.withName('/chat'),
                   );
                 },
@@ -77,7 +77,7 @@ Future GrpDetailBottomSheet(
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => HomePage()),
+                                          builder: (context) => const HomePage()),
                                       ModalRoute.withName('/chat'),
                                     );
                                   },

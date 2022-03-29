@@ -86,9 +86,6 @@ class ChannelProvider extends ChangeNotifier {
     return grpUsers;
   }
 
-  // TODO: Add paging. By default load only x number of messages.
-  // When user scroll to the top of the screen, load more messages.
-  // This function should accept page number as a parameter.
   Stream<QuerySnapshot<Object?>> getMessages() {
     var messageStream = getChannelStream(channel!.uid);
     return messageStream;

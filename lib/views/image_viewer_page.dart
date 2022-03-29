@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -21,8 +19,8 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Profile Image"),
-        backgroundColor: Color.fromRGBO(0, 0, 0, 0.2),
+        title: const Text("Profile Image"),
+        backgroundColor: const Color.fromRGBO(0, 0, 0, 0.2),
         elevation: 0,
       ),
       body: PhotoView(

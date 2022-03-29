@@ -38,14 +38,14 @@ class _HomePageState extends State<HomePage> {
                 },
                 child: Hero(
                   tag: 'profile_picture',
-                  child: profilePictureWidget(
+                  child: ProfilePictureWidget(
                     padding: false,
                     size: 35,
                     imageSrc: membership.user.image,
                   ),
                 ),
               ),
-              SizedBox(width: kDefaultPadding),
+              const SizedBox(width: kDefaultPadding),
             ],
           ),
           floatingActionButton: FloatingActionButton(
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                         return ListTile(
                           leading: Hero(
                             tag: "$uid-image",
-                            child: profilePictureWidget(
+                            child: ProfilePictureWidget(
                               openImageViewer: true,
                               heroTag: "$uid-image",
                               padding: false,

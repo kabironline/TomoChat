@@ -6,7 +6,13 @@ class BottomSheetTileWidget extends StatelessWidget {
   IconData icon;
   Color? color;
   Function onTap;
-  BottomSheetTileWidget({this.color, required this.text, required this.icon,required this.onTap});
+  BottomSheetTileWidget({
+    Key? key,
+    this.color,
+    required this.text,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

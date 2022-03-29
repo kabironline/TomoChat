@@ -84,7 +84,7 @@ class _ChatEditPageState extends State<ChatEditPage> {
               },
               child: Hero(
                 tag: "${channelProvider.channel!.uid}-image",
-                child: profilePictureWidget(
+                child: ProfilePictureWidget(
                   size: 150,
                   imageSrc: image == null
                       ? channelProvider.channelImage!

@@ -46,7 +46,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                       ? [
                           IconButton(
                             onPressed: () async {
-                              await GrpDetailBottomSheet(
+                              await grpDetailBottomSheet(
                                 context,
                                 membershipProvider.user,
                                 channelProvider,
@@ -236,11 +236,11 @@ SliverChildBuilderDelegate buildGrpDetails(
                     if (grpUsers[index].uid == membershipProvider.user.uid) {
                       return;
                     }
-                    GrpUserBottomSheet(context, grpUsers[index], channelProvider);
+                    grpUserBottomSheet(context, grpUsers[index], channelProvider);
                   },
                   leading: Hero(
                     tag: "${grpUsers[index].uid}-image",
-                    child: profilePictureWidget(
+                    child: ProfilePictureWidget(
                       padding: false,
                       size: 50,
                       heroTag: "${grpUsers[index].uid}-image",

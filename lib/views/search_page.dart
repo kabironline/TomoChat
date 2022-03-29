@@ -167,7 +167,7 @@ class _SearchPageState extends State<SearchPage> {
           searchDone = true;
         });
       },
-      child: Container(
+      child: SizedBox(
         // flex: 100,
         height: MediaQuery.of(context).size.height - 174,
         child: ListView.builder(
@@ -211,7 +211,7 @@ class _SearchPageState extends State<SearchPage> {
               },
               leading: Hero(
                 tag: searchList[index].uid,
-                child: profilePictureWidget(
+                child: ProfilePictureWidget(
                   openImageViewer: true,
                   heroTag: searchList[index].uid,
                   size: 50,

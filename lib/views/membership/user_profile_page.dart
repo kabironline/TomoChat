@@ -138,7 +138,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               });
             }
           },
-          child: profilePictureWidget(
+          child: ProfilePictureWidget(
             isFile: image == null ? null : true,
             imageSrc: image?.path ?? user.image,
             size: 150,

@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late String phoneNumber;
-  late String OTP;
+  late String otp;
   late String verificationId;
   bool otpSent = false;
   @override
@@ -57,13 +57,13 @@ class _LoginPageState extends State<LoginPage> {
                 icon: Icons.phone,
                 child: TextFormField(
                   onChanged: (value) => setState(() {
-                    OTP = value;
+                    otp = value;
                   }),
                   obscureText: true,
                   validator:
                       ValidationBuilder().minLength(10).valueRequired().build(),
                   keyboardType: TextInputType.number,
-                  decoration: kInputDecoration("OTP"),
+                  decoration: kInputDecoration("otp"),
                 ),
               ),
             ActionButton(
@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 }
               },
               icon: Icons.phone_callback,
-              text: (!otpSent ? "Send OTP" : "Verify OTP"),
+              text: (!otpSent ? "Send otp" : "Verify otp"),
             ),
           ],
         ),
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void verifyOTP() async {
     final AuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId, smsCode: OTP);
+        verificationId: verificationId, smsCode: otp);
     UserCredential value = 
         await FirebaseAuth.instance.signInWithCredential(credential);
     if (await checkUserExists(value.user!.uid)) {

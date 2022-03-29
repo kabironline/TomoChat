@@ -5,7 +5,7 @@ import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-class profilePictureWidget extends StatelessWidget {
+class ProfilePictureWidget extends StatelessWidget {
   double size;
   String imageSrc;
   String heroTag;
@@ -13,14 +13,14 @@ class profilePictureWidget extends StatelessWidget {
   bool padding;
   bool openImageViewer;
 
-  profilePictureWidget({
+  ProfilePictureWidget({Key? key, 
     this.padding = false,
     this.isFile,
     this.openImageViewer = false,
     this.heroTag = "",
     required this.size,
     required this.imageSrc,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class profilePictureWidget extends StatelessWidget {
               : CachedNetworkImage(
                   imageUrl:imageSrc,
                   fit: BoxFit.fitHeight,
-                  errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.white,),
+                  errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.white,),
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                     value: downloadProgress.progress,

@@ -9,7 +9,7 @@ import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-Future GrpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider channel) {
+Future grpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider channel) {
   return showModalBottomSheet(
     context: context,
     elevation: 0,
@@ -17,7 +17,7 @@ Future GrpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider 
     builder: (BuildContext context) {
       return BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-        child: Container(
+        child: SizedBox(
           height: channel.isAdmin! ? 437 : 291,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +41,7 @@ Future GrpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider 
                     //TODO FIX THE HERO ANIMATION NOT WORKING
                     Hero(
                       tag: "${user.uid}-image",
-                      child: profilePictureWidget(
+                      child: ProfilePictureWidget(
                         openImageViewer: true,
                         padding: true,
                         heroTag: "${user.uid}-image",

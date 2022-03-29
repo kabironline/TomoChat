@@ -43,7 +43,7 @@ Future<File?> pickAvatarImage() async {
 }
 
 Future updateGroupImage(File? image, String uid, String recentChatId) async {
-  var url;
+  String? url;
   if (image != null) {
     url = await uploadImage(image, 'group/$uid/profile');
   }
@@ -51,7 +51,7 @@ Future updateGroupImage(File? image, String uid, String recentChatId) async {
 
   if (image?.path == "" ||
       image == null ||
-      !url.startsWith('https://firebasestorage.googleapis.com/v0/b/')) {
+      !url!.startsWith('https://firebasestorage.googleapis.com/v0/b/')) {
     url = kDefualtGroupProfilePicture;
   }
 
