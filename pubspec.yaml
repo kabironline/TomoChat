@@ -27,6 +27,7 @@ dependencies:
   image_cropper: ^1.5.0
   photo_view: ^0.13.0
   any_link_preview: ^2.0.6
+  cached_network_image: ^3.2.0
 
 dependency_overrides:
   photo_view:

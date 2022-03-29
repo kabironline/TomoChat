@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/views/image_viewer_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class profilePictureWidget extends StatelessWidget {
@@ -63,9 +64,15 @@ class profilePictureWidget extends StatelessWidget {
                       fit: BoxFit.fitHeight,
                     )
                   : const SizedBox()
-              : Image.network(
-                  imageSrc,
+              : CachedNetworkImage(
+                  imageUrl:imageSrc,
                   fit: BoxFit.fitHeight,
+                  errorWidget: (context, url, error) => Icon(Icons.error, color: Colors.white,),
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    
+                  ),
                 ),
         ),
       );
