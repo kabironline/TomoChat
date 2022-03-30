@@ -8,6 +8,7 @@ import 'package:TomoChat/widgets/action_button.dart';
 import 'package:TomoChat/widgets/grp_options_bottom_sheet.dart';
 import 'package:TomoChat/widgets/grp_user_option_bottom_sheet.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -82,7 +83,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                           height: height,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: NetworkImage(channelProvider.channelImage!),
+                              image: CachedNetworkImageProvider(channelProvider.channelImage!),
                               fit: BoxFit.fitHeight,
                             ),
                           ),

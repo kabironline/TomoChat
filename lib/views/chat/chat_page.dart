@@ -125,7 +125,7 @@ class _ChatPageState extends State<ChatPage> {
                   var displayName = true;
                   var currentMessageSender = snapshot.data.docs[index].data()['senderId'];
                   String? link;
-                  List<String>? links;
+                  late var links;
                   try {
                     link = snapshot.data.docs[index]['firstLink'];
                     links = snapshot.data.docs[index]['links'];

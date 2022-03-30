@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 
@@ -31,7 +32,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
           tag: widget.heroTag,
           transitionOnUserGestures: true,
         ),
-        imageProvider: NetworkImage(
+        imageProvider: CachedNetworkImageProvider(
           widget.imageSrc,
         ),
       ),
