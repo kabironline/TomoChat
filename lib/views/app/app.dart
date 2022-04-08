@@ -1,3 +1,4 @@
+import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/themes/theme.dart';
@@ -29,6 +30,7 @@ class _TomoAppState extends State<TomoApp> {
         ChangeNotifierProvider(create: (context) => ChannelProvider()),
       ],
       child: MaterialApp(
+        color: kPrimaryColor,
         title: 'Tomo',
         routes: {
           '/home': (context) => const HomePage(),

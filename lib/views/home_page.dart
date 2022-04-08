@@ -5,7 +5,9 @@ import 'package:TomoChat/services/get_streams.dart';
 import 'package:TomoChat/services/user/get_recent_channel.dart';
 import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
+import 'package:TomoChat/views/membership/user_profile_page.dart';
 import 'package:TomoChat/views/search_page.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +36,7 @@ class _HomePageState extends State<HomePage> {
             actions: [
               GestureDetector(
                 onTap: () async {
-                  await Navigator.pushNamed(context, '/profile');
+                  await Navigator.push(context, FadeRoute(page: UserProfilePage()));
                 },
                 child: Hero(
                   tag: 'profile_picture',
@@ -44,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                     imageSrc: membership.user.image,
                   ),
                 ),
-              ),
+              ),  
               const SizedBox(width: kDefaultPadding),
             ],
           ),
@@ -54,14 +56,15 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => SearchPage(),
+                FadeRoute(
+                  page: SearchPage(),
                 ),
               );
             },
             child: const Icon(
               Icons.search,
               size: 35,
+              color: Colors.white,
             ),
           ),
           body: StreamBuilder(
@@ -144,9 +147,7 @@ class _HomePageState extends State<HomePage> {
                                 uid, snapshot.data[0], snapshot.data[1]);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
-                                builder: (context) => const ChatPage(),
-                              ),
+                              FadeRoute(page: const ChatPage())
                             );
                           },
                         );

@@ -7,17 +7,46 @@ import 'package:google_fonts/google_fonts.dart';
 ThemeData getApplicationTheme(BuildContext context) {
   return ThemeData.dark().copyWith(
     primaryColor: kPrimaryColor,
-    textTheme: GoogleFonts.robotoTextTheme(
-      Theme.of(context).textTheme,
-    ).copyWith(
-      // bodyText1: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
-      bodyText2: GoogleFonts.roboto(),
-      subtitle1:
-          GoogleFonts.roboto(textStyle: const TextStyle(color: Colors.white)),
-    ),
-    colorScheme: ColorScheme.fromSwatch().copyWith(
-      secondary: kSecondaryColor,
-      background: kPrimaryColor,
-    ),
+    scaffoldBackgroundColor: kPrimaryColor,
+    textTheme: _darkTextTheme,
+    canvasColor: kSecondaryColor,
+    iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    
+  )
   );
 }
+
+final ThemeData darkTheme = ThemeData(
+  scaffoldBackgroundColor: kPrimaryColor,
+  appBarTheme: AppBarTheme(
+    color: kPrimaryColor,
+    iconTheme: const IconThemeData(color: Colors.white),
+  ),
+  colorScheme: ColorScheme.dark(
+    primary: kPrimaryColor,
+    secondary: kSecondaryColor,
+    onPrimary: Colors.white,
+    background: kPrimaryColor,
+  ),
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  textTheme: _darkTextTheme,
+  dividerTheme: const DividerThemeData(color: Colors.black),
+);
+
+final TextTheme _darkTextTheme = GoogleFonts.robotoTextTheme(
+  ThemeData.dark().textTheme,
+);
+// TextTheme(
+//   headline1: _darkScreenHeading1TextStyle,
+// );
+
+final TextStyle _lightScreenHeading1TextStyle = TextStyle(
+    fontSize: 26.0, fontWeight: FontWeight.bold, color: kPrimaryColor, fontFamily: "Roboto");
+
+final TextStyle _darkScreenHeading1TextStyle =
+    _lightScreenHeading1TextStyle.copyWith(color: kPrimaryColor);

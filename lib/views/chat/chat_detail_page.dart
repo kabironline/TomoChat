@@ -7,6 +7,7 @@ import 'package:TomoChat/views/search_page.dart';
 import 'package:TomoChat/widgets/action_button.dart';
 import 'package:TomoChat/widgets/grp_options_bottom_sheet.dart';
 import 'package:TomoChat/widgets/grp_user_option_bottom_sheet.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -69,8 +70,8 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => ImageViewerPage(
+                          FadeRoute(
+                            page: ImageViewerPage(
                               imageSrc: channelProvider.channelImage!,
                               heroTag: "${channelProvider.channel!.uid}-image",
                             ),
@@ -144,13 +145,14 @@ Widget? _buildFloatingActionButton(BuildContext context, ChannelProvider channel
         ),
         onPressed: () async {
           await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SearchPage(
-                  isUserSelect: true,
-                  channelProvider: channelProvider,
-                ),
-              ));
+            context,
+            FadeRoute(
+              page: SearchPage(
+                isUserSelect: true,
+                channelProvider: channelProvider,
+              ),
+            ),
+          );
         },
       );
     }

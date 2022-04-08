@@ -5,6 +5,7 @@ import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/widgets/bottom_sheet_tile.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:flutter/material.dart';
 
 Future grpDetailBottomSheet(
@@ -37,7 +38,7 @@ Future grpDetailBottomSheet(
                   await channelProvider.leaveChannel();
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    FadeRoute(page: const HomePage()),
                     ModalRoute.withName('/chat'),
                   );
                 },
@@ -76,8 +77,8 @@ Future grpDetailBottomSheet(
                                     await channelProvider.deleteChannel();
                                     Navigator.pushAndRemoveUntil(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const HomePage()),
+                                      FadeRoute(
+                                          page: const HomePage()),
                                       ModalRoute.withName('/chat'),
                                     );
                                   },

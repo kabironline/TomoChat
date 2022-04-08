@@ -7,6 +7,7 @@ import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/services/image_funcs.dart';
 import 'package:TomoChat/views/membership/login_page.dart';
 import 'package:TomoChat/widgets/action_button.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
@@ -94,8 +95,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 membershipProvider.signOutUser();
                                 Navigator.pushAndRemoveUntil(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
+                                  FadeRoute(
+                                    page: LoginPage(),
                                   ),
                                   ModalRoute.withName('/home'),
                                 );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/views/image_viewer_page.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -30,8 +31,8 @@ class ProfilePictureWidget extends StatelessWidget {
           if (openImageViewer) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => ImageViewerPage(
+              FadeRoute(
+                page: ImageViewerPage(
                   isFile: isFile == null ? false : isFile!,
                   heroTag: heroTag,
                   imageSrc: imageSrc,

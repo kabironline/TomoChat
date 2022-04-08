@@ -4,6 +4,7 @@ import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/chat/create_group_chat_page.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
@@ -89,8 +90,8 @@ class _SearchPageState extends State<SearchPage> {
           }
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => CreateGroupPage(
+            FadeRoute(
+              page: CreateGroupPage(
                 users: selectedUsers,
               ),
             ),
@@ -203,9 +204,7 @@ class _SearchPageState extends State<SearchPage> {
                   await channelProvider.checkDMChannel(uid);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChatPage(),
-                    ),
+                    FadeRoute(page: const ChatPage()),
                   );
                 }
               },

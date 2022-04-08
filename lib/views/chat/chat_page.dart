@@ -6,6 +6,7 @@ import 'package:TomoChat/utils/timestamp_converter.dart';
 import 'package:TomoChat/views/chat/chat_detail_page.dart';
 import 'package:TomoChat/views/image_viewer_page.dart';
 import 'package:TomoChat/widgets/message_bottom_sheet.dart';
+import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +60,8 @@ class _ChatPageState extends State<ChatPage> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatDetailPage(),
+                    FadeRoute(
+                      page: ChatDetailPage(),
                     ),
                   );
                 },
@@ -220,8 +221,8 @@ class _ChatPageState extends State<ChatPage> {
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ImageViewerPage(
+                                        FadeRoute(
+                                          page: ImageViewerPage(
                                             imageSrc: link!,
                                           ),
                                         ),
@@ -327,7 +328,10 @@ class _ChatPageState extends State<ChatPage> {
             }),
             mini: true,
             backgroundColor: kAccentColor,
-            child: const Icon(Icons.send),
+            child: const Icon(
+              Icons.send,
+              color: Colors.white,
+            ),
           )
         ],
       ),
