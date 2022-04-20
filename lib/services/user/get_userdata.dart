@@ -14,9 +14,7 @@ Future<UserModel> getDMOtherUser(String chatId, String userId) async {
   } else {
     uid = uidList[0];
   }
-  var user =
-      await FirebaseFirestore.instance.collection('users').doc(uid).get();
-  return UserModel.fromDocument(user);
+  return getUserModel(uid);
 }
 
 Future<UserModel?> checkUserExistsLocally(String userId) async {
@@ -25,5 +23,5 @@ Future<UserModel?> checkUserExistsLocally(String userId) async {
   if (user != null) {
     return getUserModel(user);
   }
-    return null;
+  return null;
 }

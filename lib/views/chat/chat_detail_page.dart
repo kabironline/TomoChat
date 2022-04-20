@@ -24,6 +24,7 @@ class ChatDetailPage extends StatefulWidget {
 class ChatDetailPageState extends State<ChatDetailPage> {
   bool isDefualtProfilePicture = true;
   double height = 200;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<MembershipProvider>(builder: (context, membershipProvider, child) {
@@ -34,6 +35,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
           height = MediaQuery.of(context).size.width;
         }
         return Scaffold(
+          key: _scaffoldKey,
           backgroundColor: kPrimaryColor,
           floatingActionButton: _buildFloatingActionButton(context, channelProvider),
           body: SafeArea(
@@ -52,6 +54,7 @@ class ChatDetailPageState extends State<ChatDetailPage> {
                                 context,
                                 membershipProvider.user,
                                 channelProvider,
+                                _scaffoldKey,
                               );
                             },
                             icon: const Icon(Icons.more_vert_rounded),

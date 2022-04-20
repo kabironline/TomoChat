@@ -28,8 +28,11 @@ class ChannelProvider extends ChangeNotifier {
   String? channelImage;
   String? channelName;
 
+
   Future setChannel(String channelId, String? image, String? name) async {
+    var time = DateTime.now();
     channel = await getChannelModel(channelId);
+    print("Channel Retrived ${DateTime.now().difference(time).inMilliseconds}");
     if (image != null && name != null || channel?.type == "grp") {
       channelImage = image ?? channel?.image;
       channelName = name ?? channel?.name;
@@ -43,15 +46,13 @@ class ChannelProvider extends ChangeNotifier {
             : grpUsers[channel!.createdBy]?.name;
         createdAt = convertTimeStamp(channel!.createdAt) + " on " + getDate(channel!.createdAt);
       }
-      if (channel?.type == "dm") {
-        dmUser = await getDMOtherUser(channel!.uid, currentUser!.uid);
-      }
     } else {
       var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
       dmUser = value;
       channelImage = dmUser?.image;
       channelName = dmUser?.name;
     }
+    print("All Data: ${DateTime.now().difference(time).inMilliseconds}");
     notifyListeners();
   }
 
@@ -66,9 +67,9 @@ class ChannelProvider extends ChangeNotifier {
     currentUser = user;
   }
 
-  Future checkDMChannel(String otherUser) async {
+  Future checkDMChannel(String otherUser, String? image, String? name) async {
     String channelId = await getOrCreateDMConversation(currentUser!.uid, otherUser);
-    await setChannel(channelId, null, null);
+    await setChannel(channelId, image, name);
   }
 
   Future disposeChannel() async {
@@ -120,11 +121,11 @@ class ChannelProvider extends ChangeNotifier {
     await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text-link', links);
   }
 
-  Future deleteMessage (DocumentReference messageId) async {
+  Future deleteMessage(DocumentReference messageId) async {
     return await deleteMessageFromChannel(channel!, messageId);
   }
 
-  Future copyMessage (String message) async {
+  Future copyMessage(String message) async {
     return await copyMessageToChannel(message);
   }
 

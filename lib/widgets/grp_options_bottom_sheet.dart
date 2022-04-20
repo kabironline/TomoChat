@@ -9,7 +9,7 @@ import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:flutter/material.dart';
 
 Future grpDetailBottomSheet(
-    BuildContext context, UserModel user, ChannelProvider channelProvider) {
+    BuildContext context, UserModel user, ChannelProvider channelProvider, GlobalKey key) {
   return showModalBottomSheet(
     backgroundColor: kPrimaryColor,
     context: context,
@@ -51,7 +51,7 @@ Future grpDetailBottomSheet(
                   onTap: () async {
                     Navigator.pop(context);
                     await showDialog(
-                        context: context,
+                        context: key.currentContext ?? context,
                         builder: (context) {
                           return BackdropFilter(
                             filter: ImageFilter.blur(
@@ -60,9 +60,14 @@ Future grpDetailBottomSheet(
                             ),
                             child: AlertDialog(
                               backgroundColor: kSecondaryColor,
-                              title: Text("Delete Group", style: kHeadingTextStyle,),
+                              title: Text(
+                                "Delete Group",
+                                style: kHeadingTextStyle,
+                              ),
                               content: Text(
-                                  "Are you sure you want to delete this group? This action cannot be undone.", style: kSubHeadingTextStyle,),
+                                "Are you sure you want to delete this group? This action cannot be undone.",
+                                style: kSubHeadingTextStyle,
+                              ),
                               actions: [
                                 TextButton(
                                   child: Text("Cancel", style: kSubHeadingTextStyle),
@@ -77,8 +82,7 @@ Future grpDetailBottomSheet(
                                     await channelProvider.deleteChannel();
                                     Navigator.pushAndRemoveUntil(
                                       context,
-                                      FadeRoute(
-                                          page: const HomePage()),
+                                      FadeRoute(page: const HomePage()),
                                       ModalRoute.withName('/chat'),
                                     );
                                   },

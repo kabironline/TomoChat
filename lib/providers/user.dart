@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/clear_userdata.dart';
 import 'package:TomoChat/services/get_modals.dart';
 import 'package:TomoChat/services/user/set_userdata.dart';
 import 'package:TomoChat/services/user/user_sign_in.dart';
@@ -83,6 +84,13 @@ class MembershipProvider extends ChangeNotifier {
   Future updateUser(String? name, String? description, File? imageUrl) async {
     _user = await service.updateUser(name, description, imageUrl, _user!);
     setLocalUser(_user);
+    notifyListeners();
+  }
+
+  // Clear the user data in the local storage
+  Future clearCachedData() async {
+    // _user = null;
+    await clearUserData();
     notifyListeners();
   }
 }

@@ -44,9 +44,3 @@ final TextTheme _darkTextTheme = GoogleFonts.robotoTextTheme(
 // TextTheme(
 //   headline1: _darkScreenHeading1TextStyle,
 // );
-
-final TextStyle _lightScreenHeading1TextStyle = TextStyle(
-    fontSize: 26.0, fontWeight: FontWeight.bold, color: kPrimaryColor, fontFamily: "Roboto");
-
-final TextStyle _darkScreenHeading1TextStyle =
-    _lightScreenHeading1TextStyle.copyWith(color: kPrimaryColor);

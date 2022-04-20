@@ -85,7 +85,7 @@ Future grpUserBottomSheet(BuildContext context, UserModel user, ChannelProvider 
                         children: [
                           ActionButton(
                               onPressed: () async {
-                                await channel.checkDMChannel(user.uid);
+                                await channel.checkDMChannel(user.uid,user.image,user.name);
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },

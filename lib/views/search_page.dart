@@ -13,8 +13,7 @@ import 'package:provider/provider.dart';
 class SearchPage extends StatefulWidget {
   bool? isUserSelect;
   ChannelProvider? channelProvider;
-  SearchPage({Key? key, this.isUserSelect, this.channelProvider})
-      : super(key: key);
+  SearchPage({Key? key, this.isUserSelect, this.channelProvider}) : super(key: key);
   @override
   _SearchPageState createState() => _SearchPageState();
 }
@@ -57,14 +56,12 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 backgroundColor: kPrimaryColor,
               ),
-              floatingActionButton:
-                  _buildFloatingActionButton(context, membershipProvider),
+              floatingActionButton: _buildFloatingActionButton(context, membershipProvider),
               body: Column(
                 children: [
                   _buildSearchBar(context, membershipProvider),
                   searchDone
-                      ? _buildSearchList(
-                          context, searchList, membershipProvider)
+                      ? _buildSearchList(context, searchList, membershipProvider)
                       : const Center(child: CircularProgressIndicator()),
                 ],
               ),
@@ -75,8 +72,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget? _buildFloatingActionButton(
-      BuildContext context, MembershipProvider membershipProvider) {
+  Widget? _buildFloatingActionButton(BuildContext context, MembershipProvider membershipProvider) {
     if (selectedUsers.isNotEmpty && widget.isUserSelect == null) {
       return FloatingActionButton(
         backgroundColor: kAccentColor,
@@ -115,8 +111,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Widget _buildSearchBar(
-      BuildContext context, MembershipProvider membershipProvider) {
+  Widget _buildSearchBar(BuildContext context, MembershipProvider membershipProvider) {
     return SizedBox(
       height: 90,
       child: Row(
@@ -129,11 +124,8 @@ class _SearchPageState extends State<SearchPage> {
                   onChanged: (value) {
                     //Searching users in the list
                     setState(() {
-                      searchList =
-                          membershipProvider.contacts!.where((element) {
-                        return element.name
-                            .toLowerCase()
-                            .contains(value.toLowerCase());
+                      searchList = membershipProvider.contacts!.where((element) {
+                        return element.name.toLowerCase().contains(value.toLowerCase());
                       }).toList();
                     });
                   },
@@ -150,8 +142,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   //TODO MAKE THE LIST ITEM A SEPERATE WIDGET AND THEN USE IF EVERYWHERE
-  Widget _buildSearchList(BuildContext context, List<UserModel> searchList,
-      MembershipProvider membershipProvider) {
+  Widget _buildSearchList(
+      BuildContext context, List<UserModel> searchList, MembershipProvider membershipProvider) {
     return RefreshIndicator(
       backgroundColor: kAccentColor,
       color: Colors.white,
@@ -201,7 +193,11 @@ class _SearchPageState extends State<SearchPage> {
                   ChannelProvider channelProvider =
                       Provider.of<ChannelProvider>(context, listen: false);
                   channelProvider.setCurrentUser(membershipProvider.user);
-                  await channelProvider.checkDMChannel(uid);
+                  await channelProvider.checkDMChannel(
+                    uid,
+                    searchList[index].image,
+                    searchList[index].name,
+                  );
                   Navigator.push(
                     context,
                     FadeRoute(page: const ChatPage()),
