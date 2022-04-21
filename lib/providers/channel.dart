@@ -28,7 +28,6 @@ class ChannelProvider extends ChangeNotifier {
   String? channelImage;
   String? channelName;
 
-
   Future setChannel(String channelId, String? image, String? name) async {
     var time = DateTime.now();
     channel = await getChannelModel(channelId);
@@ -45,6 +44,9 @@ class ChannelProvider extends ChangeNotifier {
             ? "You"
             : grpUsers[channel!.createdBy]?.name;
         createdAt = convertTimeStamp(channel!.createdAt) + " on " + getDate(channel!.createdAt);
+      } else {
+        var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
+        dmUser = value;
       }
     } else {
       var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
@@ -143,12 +145,10 @@ class ChannelProvider extends ChangeNotifier {
 
   Future leaveChannel() async {
     await grpService.leaveGroup(channel!, currentUser!);
-    await disposeChannel();
   }
 
   Future deleteChannel() async {
     await grpService.deleteGroup(channel!);
-    await disposeChannel();
   }
 
   Future addUserToChannel(List<String> userIds) async {

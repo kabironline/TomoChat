@@ -36,30 +36,30 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
             backgroundColor: kPrimaryColor,
             title: const Text('Create Group'),
           ),
-          body: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(children: [
-              GestureDetector(
-                onTap: () async {
-                  var temp = await pickAvatarImage();
-                  setState(() {
-                    image = temp;
-                  });
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(200),
-                  child: Container(
-                    color: kSecondaryColor,
-                    height: 150,
-                    width: 150,
-                    child: (image != null)
-                        ? Image.file(image!)
-                        : Image.asset('assets/images/group_default_image.png'),
-                  ),
+          body: Column(children: [
+            GestureDetector(
+              onTap: () async {
+                var temp = await pickAvatarImage();
+                setState(() {
+                  image = temp;
+                });
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(200),
+                child: Container(
+                  color: kSecondaryColor,
+                  height: 150,
+                  width: 150,
+                  child: (image != null)
+                      ? Image.file(image!)
+                      : Image.asset('assets/images/group_default_image.png'),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.075),
-              TextInputContainer(
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.075),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              child: TextInputContainer(
                 icon: Icons.people,
                 child: TextFormField(
                   onChanged: (value) => name = value,
@@ -68,39 +68,71 @@ class _CreateGroupPageState extends State<CreateGroupPage> {
                   decoration: kInputDecoration("Group Name"),
                 ),
               ),
-              const SizedBox(height: 16),
-              TextInputContainer(
+            ),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              child: TextInputContainer(
                 icon: Icons.people,
                 child: TextFormField(
                   onChanged: (value) => description = value,
                   decoration: kInputDecoration("Description"),
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.075),
-              Consumer<ChannelProvider>(
-                builder: (context, channelProvider, child) {
-                  return ActionButton(
-                    onPressed: () async {
-                      if (name == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Group name is required'),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.075),
+            Consumer<ChannelProvider>(
+              builder: (context, channelProvider, child) {
+                return ActionButton(
+                  onPressed: () async {
+                    if (name == "") {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Group name is required'),
+                        ),
+                      );
+                      return;
+                    }
+                    channelProvider.setCurrentUser(membershipProvider.user);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: kPrimaryColor,
+                        content: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Column(
+                            children: [
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.45),
+                              const CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                              Text(
+                                'Creating group...',
+                                style: kHeadingTextStyle,
+                              ),
+                            ],
                           ),
-                        );
-                      }
-                      channelProvider.setCurrentUser(membershipProvider.user);
-                      var channel = await channelProvider.createGrpChannel(
-                          widget.users, name, description, image);
-                      await channelProvider.setChannel(channel.uid, null, name);
-                      Navigator.popAndPushNamed(context, '/chat');
-                    },
-                    icon: Icons.people_alt,
-                    text: "Create Group",
-                  );
-                },
-              ),
-            ]),
-          ),
+                        ),
+                        duration: const Duration(seconds: 3),
+                      ),
+                    );
+                    var channel = await channelProvider.createGrpChannel(
+                        widget.users, name, description, image);
+                    await channelProvider.setChannel(
+                      channel.uid,
+                      null,
+                      null,
+                    );
+                    print(channel);
+                    Navigator.popAndPushNamed(context, '/chat');
+                  },
+                  icon: Icons.people_alt,
+                  text: "Create Group",
+                );
+              },
+            ),
+          ]),
         );
       },
     );

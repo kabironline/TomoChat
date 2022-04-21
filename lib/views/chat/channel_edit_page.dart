@@ -40,8 +40,7 @@ class _ChatEditPageState extends State<ChatEditPage> {
 
   @override
   Widget build(BuildContext context) {
-    ChannelProvider channelProvider =
-        Provider.of<ChannelProvider>(context, listen: true);
+    ChannelProvider channelProvider = Provider.of<ChannelProvider>(context, listen: true);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: kPrimaryColor,
@@ -86,13 +85,12 @@ class _ChatEditPageState extends State<ChatEditPage> {
                 tag: "${channelProvider.channel!.uid}-image",
                 child: ProfilePictureWidget(
                   size: 150,
-                  imageSrc: image == null
-                      ? channelProvider.channelImage!
-                      : image!.path,
+                  imageSrc: image == null ? channelProvider.channelImage! : image!.path,
                   isFile: image == null ? null : true,
                 ),
               ),
             ),
+            const SizedBox(height: kDefaultPadding),
             TextInputContainer(
               icon: Icons.group,
               child: TextFormField(
@@ -106,23 +104,42 @@ class _ChatEditPageState extends State<ChatEditPage> {
                 controller: descriptionController,
                 validator: ValidationBuilder().maxLength(32).build(),
                 autovalidateMode: AutovalidateMode.always,
-                decoration:
-                    kInputDecoration(channelProvider.channel!.description!),
+                decoration: kInputDecoration(channelProvider.channel!.description!),
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.3),
             ActionButton(
-              onPressed: () {
+              onPressed: () async {
                 if (isEdited) {
-                  channelProvider.updateChannel(
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: kPrimaryColor,
+                        content: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          child: Column(
+                            children: [
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.45),
+                              const CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                              Text(
+                                'Updating group...',
+                                style: kHeadingTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                        duration: Duration(seconds: image == null ? 1 : 3),
+                      ),
+                    );
+                  
+                  await channelProvider.updateChannel(
                     nameController.text.isNotEmpty ? nameController.text : null,
-                    descriptionController.text.isNotEmpty
-                        ? descriptionController.text
-                        : null,
+                    descriptionController.text.isNotEmpty ? descriptionController.text : null,
                     image,
                   );
-                  Navigator.pop(context);
-                } else {
                   Navigator.pop(context);
                 }
               },
@@ -137,14 +154,12 @@ class _ChatEditPageState extends State<ChatEditPage> {
   }
 
   void checkIfEdited() {
-    ChannelProvider channelProvider =
-        Provider.of<ChannelProvider>(context, listen: false);
+    ChannelProvider channelProvider = Provider.of<ChannelProvider>(context, listen: false);
     var name = nameController.text;
     var description = descriptionController.text;
     if (image == null &&
         (name == channelProvider.channelName! || name.isEmpty) &&
-        (description == channelProvider.channel!.description ||
-            description.isEmpty)) {
+        (description == channelProvider.channel!.description || description.isEmpty)) {
       setState(() {
         isEdited = false;
       });

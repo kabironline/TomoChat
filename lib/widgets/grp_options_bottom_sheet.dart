@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
+import 'package:TomoChat/views/chat/channel_edit_page.dart';
 import 'package:TomoChat/views/home_page.dart';
 import 'package:TomoChat/widgets/bottom_sheet_tile.dart';
 import 'package:TomoChat/widgets/size_transition.dart';
@@ -27,7 +28,7 @@ Future grpDetailBottomSheet(
                   icon: Icons.edit,
                   onTap: () {
                     Navigator.pop(context);
-                    Navigator.pushNamed(context, '/chat/edit');
+                    Navigator.push(context, FadeRoute(page: const ChatEditPage()));
                   },
                 ),
               BottomSheetTileWidget(
@@ -35,12 +36,12 @@ Future grpDetailBottomSheet(
                 icon: Icons.exit_to_app,
                 onTap: () async {
                   Navigator.pop(context);
-                  await channelProvider.leaveChannel();
                   Navigator.pushAndRemoveUntil(
                     context,
                     FadeRoute(page: const HomePage()),
                     ModalRoute.withName('/chat'),
                   );
+                  await channelProvider.leaveChannel();
                 },
               ),
               if (channelProvider.createdBy == "You")
@@ -51,7 +52,7 @@ Future grpDetailBottomSheet(
                   onTap: () async {
                     Navigator.pop(context);
                     await showDialog(
-                        context: key.currentContext ?? context,
+                        context: key.currentContext!,
                         builder: (context) {
                           return BackdropFilter(
                             filter: ImageFilter.blur(
@@ -79,12 +80,12 @@ Future grpDetailBottomSheet(
                                   child: Text("Delete", style: kSubHeadingTextStyle),
                                   onPressed: () async {
                                     Navigator.pop(context);
-                                    await channelProvider.deleteChannel();
                                     Navigator.pushAndRemoveUntil(
                                       context,
                                       FadeRoute(page: const HomePage()),
                                       ModalRoute.withName('/chat'),
                                     );
+                                    await channelProvider.deleteChannel();
                                   },
                                 ),
                               ],
