@@ -2,12 +2,14 @@ import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/modals/user_modals.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
+import 'package:TomoChat/utils/contact_info.dart';
 import 'package:TomoChat/views/chat/chat_page.dart';
 import 'package:TomoChat/views/chat/create_group_chat_page.dart';
 import 'package:TomoChat/widgets/size_transition.dart';
 import 'package:TomoChat/widgets/text_input_container.dart';
 import 'package:TomoChat/widgets/user_profile_picture.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class SearchPage extends StatefulWidget {
@@ -25,9 +27,11 @@ class _SearchPageState extends State<SearchPage> {
   List<UserModel> searchList = [];
   List<String> searchListUid = [];
   bool searchDone = false;
+  PermissionStatus contactPermission = PermissionStatus.denied;
 
   @override
   Widget build(BuildContext context) {
+  getContactPermission().then((value) => contactPermission = value);
     return Consumer<MembershipProvider>(
       builder: (context, membershipProvider, child) {
         return FutureBuilder(
@@ -60,9 +64,11 @@ class _SearchPageState extends State<SearchPage> {
               body: Column(
                 children: [
                   _buildSearchBar(context, membershipProvider),
-                  searchDone
-                      ? _buildSearchList(context, searchList, membershipProvider)
-                      : const Center(child: CircularProgressIndicator()),
+                  contactPermission.isDenied
+                      ? _buildPermissionDenied(context)
+                      : searchDone
+                          ? _buildSearchList(context, searchList, membershipProvider)
+                          : const Center(child: CircularProgressIndicator()),
                 ],
               ),
             );
@@ -111,6 +117,23 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Widget _buildPermissionDenied(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(kDefaultPadding),
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height *0.2,
+          ),
+          Text(
+            "You need to allow contacts permission to search contacts",
+            style: kSubHeadingTextStyle,
+            textAlign: TextAlign.center,
+          ),        
+        ],
+      ),
+    );
+  }
   Widget _buildSearchBar(BuildContext context, MembershipProvider membershipProvider) {
     return SizedBox(
       height: 90,

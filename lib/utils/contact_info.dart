@@ -11,29 +11,35 @@ Future<void> askPermissions(BuildContext context) async {
 
 Future<PermissionStatus> getContactPermission() async {
   PermissionStatus permission = await Permission.contacts.status;
-  if (permission != PermissionStatus.granted &&
-      permission != PermissionStatus.permanentlyDenied) {
-    PermissionStatus permissionStatus = await Permission.contacts.request();
-    return permissionStatus;
+  if (permission != PermissionStatus.granted && permission != PermissionStatus.permanentlyDenied) {
+    try {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } catch (e) {
+      //Doing nothin
+    }
+    return permission;
   } else {
     return permission;
   }
 }
 
-void handleInvalidPermissions(
-    PermissionStatus permissionStatus, BuildContext context) {
+void handleInvalidPermissions(PermissionStatus permissionStatus, BuildContext context) {
   if (permissionStatus == PermissionStatus.denied) {
     const snackBar = SnackBar(content: Text('Access to contact data denied'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
-    const snackBar =
-        SnackBar(content: Text('Contact data not available on device'));
+    const snackBar = SnackBar(content: Text('Contact data not available on device'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
 Future<List<Contact>> getContacts() async {
-  var contact = await ContactsService.getContacts(photoHighResolution: false,withThumbnails: false,orderByGivenName: false,androidLocalizedLabels: false,iOSLocalizedLabels: false);
-  return contact;
+  var permissionStatus = await getContactPermission();
+  if (permissionStatus == PermissionStatus.granted) {
+    Iterable<Contact> contacts = await ContactsService.getContacts();
+    return contacts.toList();
+  } else {
+    return [];
+  }
 }
-
