@@ -31,7 +31,7 @@ class ChannelProvider extends ChangeNotifier {
   Future setChannel(String channelId, String? image, String? name) async {
     var time = DateTime.now();
     channel = await getChannelModel(channelId);
-    print("Channel Retrived ${DateTime.now().difference(time).inMilliseconds}");
+    // print("Channel Retrived ${DateTime.now().difference(time).inMilliseconds}");
     if (image != null && name != null || channel?.type == "grp") {
       channelImage = image ?? channel?.image;
       channelName = name ?? channel?.name;
@@ -54,7 +54,7 @@ class ChannelProvider extends ChangeNotifier {
       channelImage = dmUser?.image;
       channelName = dmUser?.name;
     }
-    print("All Data: ${DateTime.now().difference(time).inMilliseconds}");
+    // print("All Data: ${DateTime.now().difference(time).inMilliseconds}");
     notifyListeners();
   }
 

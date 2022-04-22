@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:TomoChat/constants.dart';
 import 'package:TomoChat/providers/channel.dart';
 import 'package:TomoChat/providers/user.dart';
@@ -32,7 +30,7 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             backgroundColor: kPrimaryColor,
             toolbarHeight: 60,
-            title: const Text('TomoChats'),
+            title: const Text('TomoChat'),
             elevation: 0,
             actions: [
               GestureDetector(
@@ -69,8 +67,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           body: RefreshIndicator(
+            backgroundColor: kAccentColor,
+            color: Colors.white,
             onRefresh: () async {
-              membership.clearCachedData();
+              await membership.clearCachedData();
             },
             child: StreamBuilder(
               stream: getRecentMessages(membership.user.uid),

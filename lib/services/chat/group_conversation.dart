@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/clear_userdata.dart';
 import 'package:TomoChat/services/image_funcs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -98,7 +99,7 @@ Future removeUserFromGroup(ChannelModel channelModel, String uid) async {
       .doc(channelModel.recentChatId)
       .update({'users': updatedModel.users});
 
-  await Localstore.instance.collection("channels").doc(channelModel.uid).delete();
+  deleteChannelModel(channelModel.uid);
   await Localstore.instance
       .collection("channels")
       .doc(updatedModel.uid)

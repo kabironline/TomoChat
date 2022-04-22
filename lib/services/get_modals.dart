@@ -1,5 +1,6 @@
 import 'package:TomoChat/modals/chat_modals.dart';
 import 'package:TomoChat/modals/user_modals.dart';
+import 'package:TomoChat/services/clear_userdata.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:localstore/localstore.dart';
 
@@ -27,10 +28,10 @@ Future<UserModel> getUserModel(var userId) async {
   if (userId is String) {
     var local = Localstore.instance;
     var user = await local.collection("users").doc(userId).get();
-    if (user?.isEmpty == false) {
-      var userData = UserModel.fromMap(user!);
+    if (user != null) {
+      var userData = UserModel.fromMap(user);
       if (userData.cachedTime!.difference(DateTime.now()).inDays > 1) {
-        await Localstore.instance.collection("users").doc(userId).delete();
+        await deleteUserModel(userId);
         return userData;
       } else {
         return userData;
