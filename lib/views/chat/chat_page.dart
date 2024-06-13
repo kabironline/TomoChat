@@ -30,7 +30,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         setState(() {
           messageCount += 20;
         });
@@ -49,7 +50,8 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Consumer<MembershipProvider>(
       builder: (context, membershipProvider, child) {
-        return Consumer<ChannelProvider>(builder: (context, channelProvider, child) {
+        return Consumer<ChannelProvider>(
+            builder: (context, channelProvider, child) {
           return Scaffold(
             resizeToAvoidBottomInset: true,
             appBar: AppBar(
@@ -100,8 +102,8 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildMessageStream(BuildContext context, ChannelProvider channelProvider,
-      MembershipProvider membershipProvider) {
+  Widget buildMessageStream(BuildContext context,
+      ChannelProvider channelProvider, MembershipProvider membershipProvider) {
     return Expanded(
       child: StreamBuilder(
         stream: getChannelStream(channelProvider.channel!.uid),
@@ -109,8 +111,9 @@ class _ChatPageState extends State<ChatPage> {
           if (!snapshot.hasData) {
             return const Center(child: Text('Start New Converstation'));
           } else {
-            messageCount =
-                messageCount > snapshot.data.docs.length ? snapshot.data.docs.length : messageCount;
+            messageCount = messageCount > snapshot.data.docs.length
+                ? snapshot.data.docs.length
+                : messageCount;
             return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.75,
@@ -124,7 +127,8 @@ class _ChatPageState extends State<ChatPage> {
                   var msgType = snapshot.data.docs[index].data()['type'];
                   var displayTime = true;
                   var displayName = true;
-                  var currentMessageSender = snapshot.data.docs[index].data()['senderId'];
+                  var currentMessageSender =
+                      snapshot.data.docs[index].data()['senderId'];
                   String? link;
                   var links;
                   try {
@@ -136,7 +140,8 @@ class _ChatPageState extends State<ChatPage> {
                   }
                   BoxDecoration decoration;
                   //Checking if the text contians a link and finding out the link
-                  String message = snapshot.data.docs[index].data()['message'] ?? "";
+                  String message =
+                      snapshot.data.docs[index].data()['message'] ?? "";
 
                   CrossAxisAlignment alignment;
                   if (currentMessageSender == membershipProvider.user.uid) {
@@ -147,14 +152,18 @@ class _ChatPageState extends State<ChatPage> {
                     decoration = kOtherMessageBoxDecoration;
                   }
                   if (index != snapshot.data.docs.length - 1 && index != 0) {
-                    var nextMessageTime = snapshot.data.docs[index + 1].data()['time'];
+                    var nextMessageTime =
+                        snapshot.data.docs[index + 1].data()['time'];
                     var nextMessageSender =
-                        snapshot.data.docs[index + 1].data()['senderId'] == currentMessageSender;
+                        snapshot.data.docs[index + 1].data()['senderId'] ==
+                            currentMessageSender;
                     var prevMessageSender =
-                        snapshot.data.docs[index - 1].data()['senderId'] == currentMessageSender;
+                        snapshot.data.docs[index - 1].data()['senderId'] ==
+                            currentMessageSender;
                     if (nextMessageTime == null) {
                       displayTime = false;
-                    } else if (convertTimeStamp(timeSent) == convertTimeStamp(nextMessageTime) &&
+                    } else if (convertTimeStamp(timeSent) ==
+                            convertTimeStamp(nextMessageTime) &&
                         nextMessageSender) {
                       displayTime = false;
                     }
@@ -172,7 +181,8 @@ class _ChatPageState extends State<ChatPage> {
                             channelProvider,
                             snapshot.data.docs[index].reference,
                             message,
-                            channelProvider.currentUser!.uid == currentMessageSender,
+                            channelProvider.currentUser!.uid ==
+                                currentMessageSender,
                             links,
                           );
                         },
@@ -187,7 +197,8 @@ class _ChatPageState extends State<ChatPage> {
                               channelProvider,
                               snapshot.data.docs[index].reference,
                               message,
-                              channelProvider.currentUser!.uid == currentMessageSender,
+                              channelProvider.currentUser!.uid ==
+                                  currentMessageSender,
                               links,
                             );
                           } else {
@@ -207,9 +218,12 @@ class _ChatPageState extends State<ChatPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (channelProvider.channel!.type == 'grp' &&
-                                  currentMessageSender != membershipProvider.user.uid &&
+                                  currentMessageSender !=
+                                      membershipProvider.user.uid &&
                                   displayName)
-                                Text(channelProvider.grpUsers[currentMessageSender]!.name,
+                                Text(
+                                    channelProvider
+                                        .grpUsers[currentMessageSender]!.name,
                                     style: kSubTextStyle),
                               if (msgType == 'text')
                                 Text(
@@ -245,7 +259,8 @@ class _ChatPageState extends State<ChatPage> {
                                       errorBody: "Unable to fetch Image",
                                       // placeholderWidget: Center(child: Text("Loading...", style: kHeadingTextStyle)),
                                       removeElevation: true,
-                                      displayDirection: uiDirection.uiDirectionHorizontal,
+                                      displayDirection:
+                                          UIDirection.uiDirectionHorizontal,
                                       titleStyle: kHeadingTextStyle,
                                       bodyStyle: kSubTextStyle,
                                       backgroundColor: kSecondaryColor,
@@ -261,10 +276,12 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       if (displayTime)
                         Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                          padding: const EdgeInsets.only(
+                              left: 16, right: 16, bottom: 8),
                           child: Text(
                             timeSent == null ? "" : convertTimeStamp(timeSent),
-                            style: const TextStyle(fontSize: 14, color: Colors.grey),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
                           ),
                         ),
                     ],

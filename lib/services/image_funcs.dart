@@ -14,30 +14,32 @@ Future<String> uploadImage(File image, String fileName) async {
   return await task.ref.getDownloadURL();
 }
 
-Future<File?> cropImage(File image) async {
+Future<CroppedFile?> cropImage(File image) async {
   return await ImageCropper().cropImage(
     sourcePath: image.path,
-    cropStyle: CropStyle.circle,
     aspectRatio: const CropAspectRatio(
       ratioX: 1,
       ratioY: 1,
     ),
-    androidUiSettings: AndroidUiSettings(
-      toolbarTitle: 'Crop Image for Profile',
-      toolbarColor: kPrimaryColor,
-      toolbarWidgetColor: Colors.white,
-      statusBarColor: kPrimaryColor,
-      backgroundColor: kPrimaryColor,
-      initAspectRatio: CropAspectRatioPreset.square,
-      lockAspectRatio: true,
-    ),
+    uiSettings: [
+      AndroidUiSettings(
+        toolbarTitle: 'Crop Image for Profile',
+        toolbarColor: kPrimaryColor,
+        toolbarWidgetColor: Colors.white,
+        statusBarColor: kPrimaryColor,
+        backgroundColor: kPrimaryColor,
+        initAspectRatio: CropAspectRatioPreset.square,
+        lockAspectRatio: true,
+      )
+    ],
   );
 }
 
 Future<File?> pickAvatarImage() async {
-  var image = await ImagePicker().pickImage(source: ImageSource.gallery,imageQuality: 40);
+  var image = await ImagePicker()
+      .pickImage(source: ImageSource.gallery, imageQuality: 40);
   if (image == null) return null;
-  File? croppedImage = await cropImage(File(image.path));
+  File? croppedImage = (await cropImage(File(image.path))) as File?;
   if (croppedImage == null) return null;
   return croppedImage;
 }

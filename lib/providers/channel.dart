@@ -29,7 +29,6 @@ class ChannelProvider extends ChangeNotifier {
   String? channelName;
 
   Future setChannel(String channelId, String? image, String? name) async {
-    var time = DateTime.now();
     channel = await getChannelModel(channelId);
     // print("Channel Retrived ${DateTime.now().difference(time).inMilliseconds}");
     if (image != null && name != null || channel?.type == "grp") {
@@ -43,7 +42,7 @@ class ChannelProvider extends ChangeNotifier {
         createdBy = grpUsers[channel!.createdBy]?.uid == currentUser?.uid
             ? "You"
             : grpUsers[channel!.createdBy]?.name;
-        createdAt = convertTimeStamp(channel!.createdAt) + " on " + getDate(channel!.createdAt);
+        createdAt = "${convertTimeStamp(channel!.createdAt)} on ${getDate(channel!.createdAt)}";
       } else {
         var value = await getDMOtherUser(channel!.uid, currentUser!.uid);
         dmUser = value;
@@ -70,7 +69,8 @@ class ChannelProvider extends ChangeNotifier {
   }
 
   Future checkDMChannel(String otherUser, String? image, String? name) async {
-    String channelId = await getOrCreateDMConversation(currentUser!.uid, otherUser);
+    String channelId =
+        await getOrCreateDMConversation(currentUser!.uid, otherUser);
     await setChannel(channelId, image, name);
   }
 
@@ -97,14 +97,16 @@ class ChannelProvider extends ChangeNotifier {
   Future sendMessage(String text) async {
     var links = findLinks(text);
     if (links == null) {
-      await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text', links);
+      await sendTextMessage(
+          text.trimRight(), channel!, currentUser!, 'text', links);
       return;
     }
     if (isOnlyLink(text)) {
       List<String> imageLinks = [];
       for (var link in links) {
         if (isImageLink(link)) {
-          await sendTextMessage(text.trimRight(), channel!, currentUser!, 'media', [link]);
+          await sendTextMessage(
+              text.trimRight(), channel!, currentUser!, 'media', [link]);
           imageLinks.add(link);
         }
       }
@@ -112,15 +114,18 @@ class ChannelProvider extends ChangeNotifier {
         links.remove(imageLink);
       }
       if (links.isNotEmpty) {
-        await sendTextMessage(text.trimRight(), channel!, currentUser!, 'link', links);
+        await sendTextMessage(
+            text.trimRight(), channel!, currentUser!, 'link', links);
       }
       return;
     }
     if (isOnlyLink(text)) {
-      await sendTextMessage(text.trimRight(), channel!, currentUser!, 'link', links);
+      await sendTextMessage(
+          text.trimRight(), channel!, currentUser!, 'link', links);
       return;
     }
-    await sendTextMessage(text.trimRight(), channel!, currentUser!, 'text-link', links);
+    await sendTextMessage(
+        text.trimRight(), channel!, currentUser!, 'text-link', links);
   }
 
   Future deleteMessage(DocumentReference messageId) async {
