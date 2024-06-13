@@ -1,7 +1,9 @@
 # TomoChat
+
 Welcome to TomoChat! This project is a real-time chat application developed using Flutter for the frontend and Firebase for the backend. It was my first full end-to-end project and served as my final year college project.
 
 # Features
+
 - Real-time messaging
 - User authentication (phone-number)
 - Profile management
@@ -12,8 +14,13 @@ Welcome to TomoChat! This project is a real-time chat application developed usin
 
 # Screenshots
 
+![Login Screen](/images/otp-signin.png)
+![Chat Screen](/images/chat.png)
+![Homepage](/images/homepage.png)
+![Grp Profile Page](/images/grp-profile-page.png)
 
 # Technologies Used
+
 Frontend: Flutter
 Backend: Firebase (Firestore, Authentication, Cloud Messaging)
 State Management: Provider
