@@ -1,16 +1,31 @@
-# chat_app
+# TomoChat
+Welcome to TomoChat! This project is a real-time chat application developed using Flutter for the frontend and Firebase for the backend. It was my first full end-to-end project and served as my final year college project.
 
-A new Flutter project.
+# Features
+- Real-time messaging
+- User authentication (phone-number)
+- Profile management
+- Group and one-on-one chats
+- Contact Syncing
+- Links and image previews in chat
+- Image sharing
 
-## Getting Started
+# Screenshots
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+# Technologies Used
+Frontend: Flutter
+Backend: Firebase (Firestore, Authentication, Cloud Messaging)
+State Management: Provider
+Known Issues
+As this project is no longer maintained, there may be unresolved bugs and issues. This application uses an outdated version of Flutter. Feel free to fork the repository and make improvements as you see fit.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Contributing
+This project is no longer maintained. However, if you wish to contribute, feel free to fork the repository and submit a pull request.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Acknowledgments
+Flutter documentation and community
+Firebase documentation and community
+
+Note: This project was my first full end-to-end project and served as my final year college project. It is no longer actively maintained.
+Thank you for checking out TomoChat! If you have any questions or feedback, feel free to reach out.
